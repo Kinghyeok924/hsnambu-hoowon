@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>남부복지관 직원 연락망 및 후원 관리 시스템</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase App (Compat) & Realtime Database -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .custom-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+    </style>
+</head>
+<body class="min-h-screen text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-3 sm:mb-0">
+                <i class="fa-solid fa-building-user text-3xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">남부복지관 통합 관리 시스템</h1>
+                    <p class="text-xs text-blue-100">직원 연락망 및 후원물품 관리 (Firebase 연동)</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="openModal('addModal')" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-blue-50 transition shadow">
+                    <i class="fa-solid fa-user-plus mr-1"></i> 직원 등록
+                </button>
+                <button onclick="openModal('trashModal')" class="bg-blue-700 text-white px-3 py-2 rounded-lg text-sm hover:bg-blue-800 transition">
+                    <i class="fa-solid fa-trash-can mr-1"></i> 휴지통 (<span id="trashCount">0</span>)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- Top Status & Badges -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-xl custom-shadow border-l-4 border-blue-500 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold">총 재직 직원</p>
+                    <h3 id="totalStaffCount" class="text-2xl font-bold text-gray-800">0명</h3>
+                </div>
+                <div class="p-3 bg-blue-50 text-blue-600 rounded-full"><i class="fa-solid fa-users text-lg"></i></div>
+            </div>
+            <div class="bg-white p-4 rounded-xl custom-shadow border-l-4 border-green-500 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold">후원물품 수입 현황</p>
+                    <h3 class="text-lg font-bold text-gray-800">실시간 접수중</h3>
+                </div>
+                <div class="p-3 bg-green-50 text-green-600 rounded-full"><i class="fa-solid fa-box-open text-lg"></i></div>
+            </div>
+            <div class="bg-white p-4 rounded-xl custom-shadow border-l-4 border-pink-500 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold">후원물품 사용 현황</p>
+                    <h3 class="text-lg font-bold text-gray-800">배분 및 관리</h3>
+                </div>
+                <div class="p-3 bg-pink-50 text-pink-600 rounded-full"><i class="fa-solid fa-hand-holding-heart text-lg"></i></div>
+            </div>
+            <div class="bg-white p-4 rounded-xl custom-shadow border-l-4 border-purple-500 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold">2D 안내길 시뮬레이션</p>
+                    <button onclick="openModal('mapModal')" class="mt-1 text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-semibold hover:bg-purple-200">
+                        <i class="fa-solid fa-map-location-dot mr-1"></i> 2층 기준 길찾기
+                    </button>
+                </div>
+                <div class="p-3 bg-purple-50 text-purple-600 rounded-full"><i class="fa-solid fa-route text-lg"></i></div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Section -->
+        <div class="bg-white p-4 rounded-xl custom-shadow mb-6 flex flex-col md:flex-row gap-3 justify-between items-center">
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <select id="filterDept" onchange="filterStaff()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">전체 부서</option>
+                    <option value="운영지원팀">운영지원팀</option>
+                    <option value="지역돌봄팀">지역돌봄팀</option>
+                    <option value="사회참여팀">사회참여팀</option>
+                    <option value="문화복지팀">문화복지팀</option>
+                    <option value="주간보호센터">주간보호센터</option>
+                </select>
+                <select id="filterPos" onchange="filterStaff()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">전체 직책</option>
+                    <option value="관장">관장님</option>
+                    <option value="부장">부장님</option>
+                    <option value="과장">과장</option>
+                    <option value="팀장">팀장</option>
+                    <option value="대리">대리</option>
+                    <option value="주임">주임</option>
+                    <option value="사회복지사">사회복지사</option>
+                    <option value="일자리담당자">일자리담당자</option>
+                    <option value="조리장">조리장</option>
+                    <option value="사무원">사무원</option>
+                    <option value="상담사">상담사</option>
+                    <option value="요양보호사">요양보호사</option>
+                    <option value="응급관리요원">응급관리요원</option>
+                    <option value="물리치료사">물리치료사</option>
+                    <option value="보조원">보조원</option>
+                </select>
+            </div>
+            <div class="w-full md:w-72">
+                <input type="text" id="searchInput" oninput="filterStaff()" placeholder="이름 또는 키워드 검색..." class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+        </div>
+
+        <!-- Staff List Grid -->
+        <div id="staffGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Dynamically rendered -->
+        </div>
+    </main>
+
+    <!-- Modal: Add/Edit Staff -->
+    <div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-user-pen mr-2 text-blue-600"></i>직원 정보 입력</h3>
+                <button onclick="closeModal('addModal')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form id="staffForm" onsubmit="saveStaff(event)" class="space-y-4">
+                <input type="hidden" id="staffId">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">부서 선택</label>
+                    <select id="modalDept" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                        <option value="운영지원팀">운영지원팀</option>
+                        <option value="지역돌봄팀">지역돌봄팀</option>
+                        <option value="사회참여팀">사회참여팀</option>
+                        <option value="문화복지팀">문화복지팀</option>
+                        <option value="주간보호센터">주간보호센터</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">직책 선택</label>
+                    <select id="modalPos" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                        <option value="관장님">관장님</option>
+                        <option value="부장님">부장님</option>
+                        <option value="과장">과장</option>
+                        <option value="팀장">팀장</option>
+                        <option value="대리">대리</option>
+                        <option value="주임">주임</option>
+                        <option value="사회복지사">사회복지사</option>
+                        <option value="일자리담당자">일자리담당자</option>
+                        <option value="조리장">조리장</option>
+                        <option value="사무원">사무원</option>
+                        <option value="상담사">상담사</option>
+                        <option value="요양보호사">요양보호사</option>
+                        <option value="응급관리요원">응급관리요원</option>
+                        <option value="물리치료사">물리치료사</option>
+                        <option value="보조원">보조원</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">이름</label>
+                    <input type="text" id="modalName" required placeholder="홍길동" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">내선번호 / 연락처</label>
+                    <input type="text" id="modalPhone" placeholder="02-XXX-XXXX" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('addModal')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-300">취소</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700">저장</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Trashcan -->
+    <div id="trashModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-trash-restore mr-2 text-red-500"></i>휴지통 (삭제된 항목)</h3>
+                <button onclick="closeModal('trashModal')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div id="trashList" class="overflow-y-auto flex-1 space-y-2 pr-1">
+                <!-- Trash items -->
+            </div>
+            <div class="mt-4 text-right">
+                <button onclick="closeModal('trashModal')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 2D Route Simulation (2층 기준) -->
+    <div id="mapModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl max-w-xl w-full p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-route mr-2 text-purple-600"></i>2층 사무실 기준 이동 시뮬레이션</h3>
+                <button onclick="closeModal('mapModal')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">목적지 선택</label>
+                    <select id="destSelect" onchange="simulateRoute()" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500">
+                        <option value="1">후원물품 창고 (1층)</option>
+                        <option value="3">프로그램실 및 강당 (3층)</option>
+                        <option value="sub">주간보호센터 / 물리치료실 (별관/지하)</option>
+                    </select>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-xl border border-purple-200">
+                    <h4 class="font-bold text-purple-800 text-sm mb-1"><i class="fa-solid fa-shoe-prints mr-1"></i> 안내 경로 안내</h4>
+                    <p id="routeDesc" class="text-sm text-purple-700">2층 사무실에서 출발하여 중앙 계단을 통해 1층 후원물품 창고로 이동합니다.</p>
+                </div>
+            </div>
+            <div class="mt-6 text-right">
+                <button onclick="closeModal('mapModal')" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Logic -->
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            databaseURL: "https://hsnambu-hoowon-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let staffData = [];
+        let trashData = [];
+
+        // Initial default data based on PDF
+        const initialStaff = [
+            { id: '1', dept: '운영지원팀', pos: '관장님', name: '조지형', phone: '02-000-0001' },
+            { id: '2', dept: '운영지원팀', pos: '부장님', name: '백승영', phone: '02-000-0002' },
+            { id: '3', dept: '운영지원팀', pos: '과장', name: '조은정', phone: '02-000-0003' },
+            { id: '4', dept: '운영지원팀', pos: '대리', name: '김수나', phone: '02-000-0004' },
+            { id: '5', dept: '운영지원팀', pos: '대리', name: '김은비', phone: '02-000-0005' },
+            { id: '6', dept: '운영지원팀', pos: '사회복지사', name: '김은영', phone: '02-000-0006' },
+            { id: '7', dept: '운영지원팀', pos: '주임', name: '유관재', phone: '02-000-0007' },
+            { id: '8', dept: '운영지원팀', pos: '주임', name: '이은선', phone: '02-000-0008' },
+            { id: '9', dept: '지역돌봄팀', pos: '팀장', name: '김미화', phone: '02-000-0010' },
+            { id: '10', dept: '지역돌봄팀', pos: '대리', name: '장성욱', phone: '02-000-0011' },
+            { id: '11', dept: '지역돌봄팀', pos: '사무원', name: '김지민', phone: '02-000-0012' },
+            { id: '12', dept: '사회참여팀', pos: '팀장', name: '김두연', phone: '02-000-0020' },
+            { id: '13', dept: '사회참여팀', pos: '대리', name: '이다현', phone: '02-000-0021' },
+            { id: '14', dept: '사회참여팀', pos: '사회복지사', name: '박상연', phone: '02-000-0022' },
+            { id: '15', dept: '문화복지팀', pos: '조리장', name: '성재훈', phone: '02-000-0030' },
+            { id: '16', dept: '주간보호센터', pos: '물리치료사', name: '정진영', phone: '02-000-0040' }
+        ];
+
+        // Realtime listener
+        database.ref('staff').on('value', (snapshot) => {
+            const val = snapshot.val();
+            if (val) {
+                staffData = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+            } else {
+                // Seed initial data if empty
+                initialStaff.forEach(item => {
+                    database.ref('staff/' + item.id).set(item);
+                });
+            }
+            renderStaff();
+        });
+
+        database.ref('trash').on('value', (snapshot) => {
+            const val = snapshot.val();
+            if (val) {
+                trashData = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+            } else {
+                trashData = [];
+            }
+            renderTrash();
+        });
+
+        function renderStaff() {
+            const grid = document.getElementById('staffGrid');
+            const filterDept = document.getElementById('filterDept').value;
+            const filterPos = document.getElementById('filterPos').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            const filtered = staffData.filter(item => {
+                const matchDept = !filterDept || item.dept === filterDept;
+                const matchPos = !filterPos || item.pos === filterPos;
+                const matchSearch = !searchInput || item.name.toLowerCase().includes(searchInput) || item.dept.toLowerCase().includes(searchInput);
+                return matchDept && matchPos && matchSearch;
+            });
+
+            document.getElementById('totalStaffCount').innerText = staffData.length + '명';
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500 bg-white rounded-xl custom-shadow">검색된 직원이 없습니다.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-white p-5 rounded-xl custom-shadow border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-bold">${item.dept}</span>
+                            <div class="space-x-1">
+                                <button onclick="editStaff('${item.id}')" class="text-gray-400 hover:text-blue-600 p-1"><i class="fa-solid fa-pen text-xs"></i></button>
+                                <button onclick="moveToTrash('${item.id}')" class="text-gray-400 hover:text-red-600 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">${item.name} <span class="text-sm font-normal text-gray-500">(${item.pos})</span></h3>
+                        <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-phone mr-1"></i>${item.phone || '내선번호 미등록'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterStaff() {
+            renderStaff();
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            if (modalId === 'addModal' && !document.getElementById('staffId').value) {
+                document.getElementById('staffForm').reset();
+                document.getElementById('staffId').value = '';
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function saveStaff(e) {
+            e.preventDefault();
+            const id = document.getElementById('staffId').value || 'staff_' + Date.now();
+            const dept = document.getElementById('modalDept').value;
+            const pos = document.getElementById('modalPos').value;
+            const name = document.getElementById('modalName').value;
+            const phone = document.getElementById('modalPhone').value;
+
+            database.ref('staff/' + id).set({ dept, pos, name, phone }).then(() => {
+                closeModal('addModal');
+                document.getElementById('staffForm').reset();
+                document.getElementById('staffId').value = '';
+            });
+        }
+
+        function editStaff(id) {
+            const item = staffData.find(s => s.id === id);
+            if (item) {
+                document.getElementById('staffId').value = item.id;
+                document.getElementById('modalDept').value = item.dept;
+                document.getElementById('modalPos').value = item.pos;
+                document.getElementById('modalName').value = item.name;
+                document.getElementById('modalPhone').value = item.phone || '';
+                openModal('addModal');
+            }
+        }
+
+        function moveToTrash(id) {
+            const item = staffData.find(s => s.id === id);
+            if (item) {
+                database.ref('trash/' + id).set(item).then(() => {
+                    database.ref('staff/' + id).remove();
+                });
+            }
+        }
+
+        function renderTrash() {
+            document.getElementById('trashCount').innerText = trashData.length;
+            const list = document.getElementById('trashList');
+            if (trashData.length === 0) {
+                list.innerHTML = `<p class="text-center text-gray-400 py-6 text-sm">휴지통이 비어 있습니다.</p>`;
+                return;
+            }
+            list.innerHTML = trashData.map(item => `
+                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm">
+                    <div>
+                        <span class="font-bold text-gray-800">${item.name}</span> <span class="text-xs text-gray-500">(${item.dept} / ${item.pos})</span>
+                    </div>
+                    <button onclick="restoreStaff('${item.id}')" class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold hover:bg-blue-700">복구</button>
+                </div>
+            `).join('');
+        }
+
+        function restoreStaff(id) {
+            const item = trashData.find(s => s.id === id);
+            if (item) {
+                database.ref('staff/' + id).set(item).then(() => {
+                    database.ref('trash/' + id).remove();
+                });
+            }
+        }
+
+        function simulateRoute() {
+            const dest = document.getElementById('destSelect').value;
+            const desc = document.getElementById('routeDesc');
+            if (dest === '1') {
+                desc.innerText = "2층 사무실에서 출발하여 중앙 계단 또는 엘리베이터를 이용하여 1층으로 내려간 뒤, 우측 복도 끝 후원물품 창고에 도착합니다.";
+            } else if (dest === '3') {
+                desc.innerText = "2층 사무실에서 출발하여 계단을 통해 3층 프로그램실 및 강당으로 이동합니다.";
+            } else {
+                desc.innerText = "2층 사무실에서 후문 통로를 통해 주간보호센터 및 지하 물리치료실 방향으로 이동합니다.";
+            }
+        }
+    </script>
+</body>
+</html>
