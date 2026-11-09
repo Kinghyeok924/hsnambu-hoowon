@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>화성시남부노인복지관 후원물품 수입·사용 관리대장 (2026.11.09 최신화)</title>
+  <!-- Pretendard Web Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <!-- SheetJS for Excel Download -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM TOKENS (Based on Airbnb Light Theme)
+       ========================================================================== */
+    :root {
+      --color-rausch: #ff385c;
+      --color-rausch-600: #e00b41;
+      --color-hof: #222222;
+      --color-foggy: #6a6a6a;
+      --color-grey-500: #c1c1c1;
+      --color-bebe: #ebebeb;
+      --color-deco: #dddddd;
+      --color-faint: #f7f7f7;
+      --color-white: #ffffff;
+      --color-success: #008a05;
+      --color-success-bg: #eafbe7;
+      --color-warning: #c25e00;
+      --color-warning-bg: #fff5e6;
+      --color-danger: #c13515;
+      --color-danger-bg: #fdf0ed;
+
+      --font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Segoe UI", sans-serif;
+
+      --radius-sm: 6px;
+      --radius-inputs: 8px;
+      --radius-cards: 14px;
+      --radius-pill: 9999px;
+
+      --shadow-subtle: 0px 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px 0px rgba(0, 0, 0, 0.04), 0px 4px 8px 0px rgba(0, 0, 0, 0.06);
+      --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.06);
+      --shadow-modal: 0 16px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--color-white);
+      color: var(--color-hof);
+      line-height: 1.45;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       TOP NAVIGATION BAR
+       ========================================================================== */
+    .top-header {
+      height: 80px;
+      background-color: var(--color-white);
+      border-bottom: 1px solid var(--color-bebe);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 16px;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      flex-shrink: 0;
+    }
+
+    .brand-logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--color-rausch), var(--color-rausch-600));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: 22px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(255, 56, 92, 0.35);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color
