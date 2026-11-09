@@ -496,6 +496,108 @@
       background: rgba(100, 100, 100, 0.88);
     }
 
+    .badge-photos-count {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      backdrop-filter: blur(2px);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* Thumbnail Gallery in Modal */
+    .gallery-thumbnails-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      margin-top: 8px;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    .gallery-thumb-wrap {
+      position: relative;
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: visible;
+    }
+
+    .gallery-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: #f0f0f0;
+    }
+
+    .gallery-thumb.active {
+      border-color: var(--color-rausch);
+      box-shadow: 0 0 0 1px var(--color-rausch);
+    }
+
+    .gallery-thumb-del {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: rgba(34, 34, 34, 0.85);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid white;
+      transition: background 0.12s ease;
+      z-index: 10;
+    }
+
+    .gallery-thumb-del:hover {
+      background: var(--color-danger);
+    }
+
+    .gallery-thumb-add-btn {
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      border: 1.5px dashed var(--color-bebe);
+      background: var(--color-faint);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      color: var(--color-foggy);
+      font-size: 10px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .gallery-thumb-add-btn:hover {
+      background: #eee;
+      border-color: var(--color-hof);
+      color: var(--color-hof);
+    }
+
     /* Card Photo Change Button */
     .card-photo-change-btn {
       position: absolute;
@@ -813,6 +915,27 @@
       font-size: 12px;
     }
 
+    .btn-cancel-log {
+      background: #fff0f0;
+      color: var(--color-danger);
+      border: 1px solid #ffd6d6;
+      border-radius: var(--radius-pill);
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .btn-cancel-log:hover {
+      background: var(--color-danger);
+      color: white;
+      border-color: var(--color-danger);
+    }
+
     /* Table inside Full Ledger Modal */
     .ledger-table {
       width: 100%;
@@ -1075,13 +1198,27 @@
       </div>
 
       <div class="modal-body">
-        <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:24px;">
-          <!-- Photo Box in Modal -->
-          <div style="width:220px; height:220px; border-radius:12px; overflow:hidden; position:relative; flex-shrink:0; background:#f0f0f0;">
-            <img id="detailItemImg" src="" style="width:100%; height:100%; object-fit:cover;">
-            <button class="card-photo-change-btn" id="modalChangePhotoBtn" onclick="triggerCardPhotoUploadFromModal()">
-              📷 사진 넣기/변경
-            </button>
+        <div style="display:flex; gap:22px; flex-wrap:wrap; margin-bottom:24px;">
+          <!-- Photo Box & Multi-photo Thumbnail Gallery in Modal -->
+          <div style="width:230px; display:flex; flex-direction:column; flex-shrink:0;">
+            <div style="width:230px; height:230px; border-radius:12px; overflow:hidden; position:relative; background:#f0f0f0; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+              <img id="detailItemImg" src="" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;" onclick="openPhotoZoom(this.src)" title="클릭 시 크게 보기">
+              <button class="card-photo-change-btn" id="modalChangePhotoBtn" onclick="triggerCardPhotoUploadFromModal()" title="대표 사진 교체">
+                📷 대표사진 변경
+              </button>
+            </div>
+
+            <!-- Multiple Photos (유통기한/라벨/박스 사진) Strip -->
+            <div style="margin-top:10px;">
+              <div style="font-size:12px; font-weight:700; color:var(--color-hof); display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span>📷 등록된 사진 (<span id="modalPhotoCount">1</span>장)</span>
+                <span style="font-size:11px; color:var(--color-rausch); font-weight:600;">유통기한·라벨 사진</span>
+              </div>
+              <div class="gallery-thumbnails-strip" id="modalThumbnailsStrip">
+                <!-- Dynamically populated thumbnails -->
+              </div>
+              <input type="file" id="modalAddExtraPhotoInput" accept="image/*" style="display:none;" onchange="handleAddExtraPhoto(event)">
+            </div>
           </div>
 
           <!-- Metadata Box -->
@@ -1120,16 +1257,16 @@
 
         <hr style="border:none; border-top:1px solid var(--color-bebe); margin:20px 0;">
 
-        <!-- Usage Registration Form -->
+        <!-- Usage Registration Form with Date Picker -->
         <div style="background:#fff9fa; border:1px solid #ffd8e0; border-radius:12px; padding:18px; margin-bottom:24px;">
           <h4 style="font-size:15px; font-weight:700; color:var(--color-rausch-600); margin-bottom:12px; display:flex; align-items:center; gap:6px;">
             <span>✨ 물품 사용(반출) 등록</span>
-            <span style="font-size:12px; font-weight:400; color:var(--color-foggy);">(등록 즉시 재고가 자동 차감됩니다)</span>
+            <span style="font-size:12px; font-weight:400; color:var(--color-foggy);">(등록 즉시 재고가 자동 차감되며 전 직원 화면에 연동됩니다)</span>
           </h4>
 
-          <div class="form-row-2">
+          <div class="form-row-3">
             <div class="form-group">
-              <label class="form-label">사용 부서</label>
+              <label class="form-label">사용 부서 *</label>
               <select id="takeoutDept" class="form-select" onchange="toggleCustomDeptInput()">
                 <option value="운영지원팀">운영지원팀</option>
                 <option value="사회참여팀">사회참여팀</option>
@@ -1138,18 +1275,28 @@
                 <option value="주간보호센터">주간보호센터</option>
                 <option value="타기관">타기관 (직접 입력)</option>
               </select>
-              <input type="text" id="customDeptInput" class="form-input" placeholder="기관명 직접 입력 (예: 남양노인복지관)" style="display:none; margin-top:6px;">
             </div>
 
             <div class="form-group">
-              <label class="form-label">사용 수량</label>
-              <div class="stepper-box">
-                <button type="button" class="stepper-btn" onclick="adjustQty(-1)">−</button>
-                <input type="number" id="takeoutQty" class="stepper-input" value="1" min="1">
-                <button type="button" class="stepper-btn" onclick="adjustQty(1)">+</button>
-              </div>
-              <span id="takeoutUnitSpan" style="font-size:13px; font-weight:600; margin-left:8px; color:var(--color-foggy);">개</span>
+              <label class="form-label">사용 일자 (달력 클릭) *</label>
+              <input type="date" id="takeoutDate" class="form-input" style="font-weight:600; cursor:pointer;" title="사용 일자를 달력에서 직접 선택하세요">
             </div>
+
+            <div class="form-group">
+              <label class="form-label">사용 수량 *</label>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div class="stepper-box" style="flex:1;">
+                  <button type="button" class="stepper-btn" onclick="adjustQty(-1)">−</button>
+                  <input type="number" id="takeoutQty" class="stepper-input" value="1" min="1" style="width:100%;">
+                  <button type="button" class="stepper-btn" onclick="adjustQty(1)">+</button>
+                </div>
+                <span id="takeoutUnitSpan" style="font-size:13px; font-weight:700; color:var(--color-foggy); min-width:24px;">개</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="customDeptWrap" style="display:none; margin-bottom:12px;">
+            <input type="text" id="customDeptInput" class="form-input" placeholder="기관명 직접 입력 (예: 남양노인복지관)">
           </div>
 
           <div class="form-group" style="margin-bottom:12px;">
@@ -1170,7 +1317,7 @@
           </button>
         </div>
 
-        <!-- History Timeline -->
+        <!-- History Timeline with Cancel Button -->
         <div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
             <h4 style="font-size:15px; font-weight:700; color:var(--color-hof);">이 품목의 최근 사용 이력</h4>
@@ -1182,9 +1329,20 @@
         </div>
       </div>
 
-      <div class="modal-footer">
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+        <button class="btn btn-outline" style="color:var(--color-danger); border-color:#f5c2b7; background:#fffbfb;" onclick="deleteCurrentItem()" title="잘못 기입했거나 사용 완료된 품목을 관리대장에서 완전히 삭제합니다">
+          🗑️ 이 품목 완전히 삭제
+        </button>
         <button class="btn btn-outline" onclick="closeModal('modalDetail')">닫기</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Zoom Lightbox Modal for Expiration Date Photos -->
+  <div class="modal-backdrop" id="modalPhotoZoom" style="z-index:1100;" onclick="closeModal('modalPhotoZoom')">
+    <div style="max-width:90vw; max-height:90vh; position:relative; display:flex; flex-direction:column; align-items:center;">
+      <img id="zoomModalImg" src="" style="max-width:100%; max-height:85vh; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); object-fit:contain; background:black;">
+      <div style="color:white; font-size:13px; margin-top:10px; font-weight:600;">(화면 아무 곳이나 클릭하면 닫힙니다)</div>
     </div>
   </div>
 
@@ -2267,56 +2425,8 @@
       }
     ];
 
-    const DEFAULT_LOGS = [
-      {
-        id: "log-1",
-        itemId: "item-23",
-        itemName: "소고기 해장국밥",
-        dept: "문화복지팀",
-        qty: 4,
-        unit: "개",
-        purpose: "공유냉장고 채움",
-        location: "공유냉장고",
-        timestamp: "2026-11-06 14:20",
-        handler: "문화복지팀 박주임"
-      },
-      {
-        id: "log-2",
-        itemId: "item-26",
-        itemName: "수향미 500G",
-        dept: "지역돌봄팀",
-        qty: 15,
-        unit: "봉지",
-        purpose: "취약계층 어르신 가정 나눔",
-        location: "MDF실",
-        timestamp: "2026-11-04 11:30",
-        handler: "지역돌봄팀 최선생"
-      },
-      {
-        id: "log-3",
-        itemId: "item-11",
-        itemName: "라벤더 신주머니(DTS60UP62M)",
-        dept: "사회참여팀",
-        qty: 25,
-        unit: "개",
-        purpose: "복지관 문화프로그램 참여자 배부",
-        location: "1층 창고",
-        timestamp: "2026-10-30 16:10",
-        handler: "사회참여팀 김주임"
-      },
-      {
-        id: "log-4",
-        itemId: "item-52",
-        itemName: "종이컵(커피빈 12온스)",
-        dept: "운영지원팀",
-        qty: 1000,
-        unit: "개",
-        purpose: "복지관 경로식당 및 행사 음료 지원",
-        location: "3층 창고",
-        timestamp: "2026-10-25 09:40",
-        handler: "운영지원팀 담당자"
-      }
-    ];
+    // 임의의 사용 내역 완전 초기화 (사용자가 원하는 날짜로 수동 기입)
+    const DEFAULT_LOGS = [];
 
     let items = [];
     let releaseLogs = [];
@@ -2639,6 +2749,11 @@
       }
 
       grid.innerHTML = filtered.map(item => {
+        // Multi-photos handling
+        const photos = (item.images && Array.isArray(item.images) && item.images.length > 0) ? item.images : [item.img];
+        const mainPhoto = photos[0] || item.img;
+        const photoCountBadge = photos.length > 1 ? `<span class="badge-photos-count">📷 ${photos.length}장</span>` : '';
+
         // Stock badge text
         let stockBadgeHtml = `<span class="badge-stock-pill">재고 ${item.stockQty.toLocaleString()}${item.unit}</span>`;
         if (item.location === "사용완료" || item.stockQty === 0) {
@@ -2657,12 +2772,13 @@
           <div class="item-card" onclick="openDetailModal('${item.id}')">
             <!-- 1:1 Photo Box -->
             <div class="card-photo-box">
-              <img class="card-img" src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80'">
+              <img class="card-img" src="${mainPhoto}" alt="${item.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80'">
               
               <div class="badge-location-pill">
                 <span>📍</span> <span>${item.location}</span>
               </div>
 
+              ${photoCountBadge}
               ${stockBadgeHtml}
 
               <!-- Direct Photo Upload Button on Card -->
@@ -2703,7 +2819,14 @@
       activeModalItemId = itemId;
       document.getElementById("detailItemName").innerText = item.name;
       document.getElementById("detailItemFullName").innerText = item.name;
-      document.getElementById("detailItemImg").src = item.img;
+
+      // Ensure images array
+      if (!item.images || !Array.isArray(item.images) || item.images.length === 0) {
+        item.images = [item.img];
+      }
+      document.getElementById("detailItemImg").src = item.images[0] || item.img;
+      renderModalThumbnails(item);
+
       document.getElementById("detailItemCategory").innerText = item.category;
       document.getElementById("detailItemLocation").innerText = "📍 " + item.location;
       document.getElementById("detailItemDonor").innerText = item.donor || "익명";
@@ -2716,8 +2839,12 @@
 
       // Reset Takeout form
       document.getElementById("takeoutDept").value = "운영지원팀";
-      document.getElementById("customDeptInput").style.display = "none";
+      document.getElementById("customDeptWrap").style.display = "none";
       document.getElementById("customDeptInput").value = "";
+
+      // 사용 일자 달력 기본값을 오늘 날짜로 세팅
+      document.getElementById("takeoutDate").value = new Date().toISOString().slice(0, 10);
+
       document.getElementById("takeoutQty").value = 1;
       document.getElementById("takeoutQty").max = item.stockQty > 0 ? item.stockQty : 1;
       document.getElementById("takeoutUnitSpan").innerText = item.unit;
@@ -2727,11 +2854,113 @@
       openModal("modalDetail");
     }
 
+    /* Thumbnail Gallery Rendering (유통기한/라벨/추가 사진 스트립) */
+    function renderModalThumbnails(item) {
+      const strip = document.getElementById("modalThumbnailsStrip");
+      const photos = item.images || [item.img];
+      document.getElementById("modalPhotoCount").innerText = photos.length;
+
+      let html = photos.map((photoUrl, idx) => `
+        <div class="gallery-thumb-wrap">
+          <img src="${photoUrl}" class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="selectModalPhoto(this, '${photoUrl}')" title="클릭하여 크게 보기">
+          ${photos.length > 1 ? `<button class="gallery-thumb-del" onclick="event.stopPropagation(); deleteExtraPhoto(${idx})" title="이 사진 삭제">✕</button>` : ''}
+        </div>
+      `).join("");
+
+      // Add Photo Button (유통기한/라벨 사진 추가)
+      html += `
+        <div class="gallery-thumb-add-btn" onclick="triggerAddExtraPhoto()" title="유통기한 사진이나 제품 라벨 사진 추가">
+          <span style="font-size:16px; font-weight:700;">+</span>
+          <span>사진 추가</span>
+        </div>
+      `;
+
+      strip.innerHTML = html;
+    }
+
+    function selectModalPhoto(thumbEl, photoUrl) {
+      document.querySelectorAll(".gallery-thumb").forEach(t => t.classList.remove("active"));
+      thumbEl.classList.add("active");
+      document.getElementById("detailItemImg").src = photoUrl;
+    }
+
+    function triggerAddExtraPhoto() {
+      const fileInput = document.getElementById("modalAddExtraPhotoInput");
+      fileInput.value = "";
+      fileInput.click();
+    }
+
+    function handleAddExtraPhoto(e) {
+      const file = e.target.files[0];
+      if (!file || !activeModalItemId) return;
+
+      const item = items.find(i => i.id === activeModalItemId);
+      if (!item) return;
+
+      compressImageFile(file, function(compressedDataUrl) {
+        if (!item.images || !Array.isArray(item.images)) {
+          item.images = [item.img];
+        }
+        item.images.push(compressedDataUrl);
+        saveData();
+        renderModalThumbnails(item);
+        document.getElementById("detailItemImg").src = compressedDataUrl;
+        renderCards();
+        showToast("유통기한/상세 사진이 등록되었습니다! 전 직원 화면에 실시간 연동됩니다.");
+      });
+    }
+
+    function deleteExtraPhoto(idx) {
+      const item = items.find(i => i.id === activeModalItemId);
+      if (!item || !item.images) return;
+
+      if (!confirm("이 사진을 삭제하시겠습니까?")) return;
+
+      item.images.splice(idx, 1);
+      if (item.images.length > 0) {
+        item.img = item.images[0];
+        document.getElementById("detailItemImg").src = item.images[0];
+      }
+      saveData();
+      renderModalThumbnails(item);
+      renderCards();
+      showToast("사진이 삭제되었습니다.");
+    }
+
+    /* Photo Zoom Lightbox (유통기한 글자 선명 확대 보기) */
+    function openPhotoZoom(src) {
+      if (!src) return;
+      document.getElementById("zoomModalImg").src = src;
+      openModal("modalPhotoZoom");
+    }
+
+    /* Delete Item Completely (잘못 기입하거나 사용 완료된 품목 영구 삭제) */
+    function deleteCurrentItem() {
+      const item = items.find(i => i.id === activeModalItemId);
+      if (!item) return;
+
+      if (!confirm(`정말 이 후원품 ['${item.name}']을(를) 완전히 삭제하시겠습니까?\n\n※ 잘못 기입되었거나 사용 완료된 품목을 삭제하면 클라우드 및 전 직원 화면에서도 영구 삭제됩니다.`)) {
+        return;
+      }
+
+      // Remove from items
+      items = items.filter(i => i.id !== activeModalItemId);
+      // Remove related logs
+      releaseLogs = releaseLogs.filter(l => l.itemId !== activeModalItemId);
+
+      saveData();
+      closeModal("modalDetail");
+      renderCards();
+      updateTotalStats();
+      showToast(`['${item.name}'] 후원품이 삭제되었습니다.`);
+      alert(`['${item.name}'] 후원품이 관리대장에서 완전히 삭제되었습니다.`);
+    }
+
     function toggleCustomDeptInput() {
       const sel = document.getElementById("takeoutDept").value;
-      const customInput = document.getElementById("customDeptInput");
-      customInput.style.display = sel === "타기관" ? "block" : "none";
-      if (sel === "타기관") customInput.focus();
+      const wrap = document.getElementById("customDeptWrap");
+      wrap.style.display = sel === "타기관" ? "block" : "none";
+      if (sel === "타기관") document.getElementById("customDeptInput").focus();
     }
 
     function adjustQty(delta) {
@@ -2745,6 +2974,7 @@
       document.getElementById("takeoutPurpose").value = text;
     }
 
+    /* Submit Takeout with Custom Calendar Date */
     function submitTakeout() {
       const item = items.find(i => i.id === activeModalItemId);
       if (!item) return;
@@ -2773,6 +3003,9 @@
         return;
       }
 
+      // 달력에서 선택한 사용 일자 (휴가, 지난 날짜 등 수동 조작 지원)
+      const selectedDate = document.getElementById("takeoutDate").value || new Date().toISOString().slice(0, 10);
+
       if (qty > item.stockQty) {
         if (!confirm(`현재 남은 재고(${item.stockQty}${item.unit})보다 많은 수량(${qty}${item.unit})입니다. 그래도 사용 처리하시겠습니까?`)) {
           return;
@@ -2786,9 +3019,6 @@
         item.location = "사용완료";
       }
 
-      const now = new Date();
-      const timeStr = now.toISOString().slice(0, 10) + " " + now.toTimeString().slice(0, 5);
-
       const newLog = {
         id: "log-" + Date.now(),
         itemId: item.id,
@@ -2798,7 +3028,7 @@
         unit: item.unit,
         purpose: purpose,
         location: item.location,
-        timestamp: timeStr,
+        timestamp: selectedDate, // 사용자가 달력에서 직접 지정한 사용 일자
         handler: dept + " 담당자"
       };
 
@@ -2814,11 +3044,46 @@
       renderItemHistoryList(item.id);
       renderCards();
 
-      showToast(`[${dept}] ${item.name} ${qty}${item.unit} 사용 등록 완료!`);
-      alert(`[${dept}] ${item.name} ${qty}${item.unit} 사용 등록이 완료되었습니다.\n재고가 자동으로 차감되었습니다.`);
+      showToast(`[${dept}] ${item.name} ${qty}${item.unit} (${selectedDate}) 사용 등록 완료!`);
+      alert(`[${dept}] ${item.name} ${qty}${item.unit} 사용 등록이 완료되었습니다.\n사용일자(${selectedDate})로 기록되었으며 재고가 차감되었습니다.`);
     }
 
-    /* Render Item History Timeline */
+    /* Cancel Release Log & Restore Stock (사용 내역 취소 및 수량 원상 복구) */
+    function cancelReleaseLog(logId) {
+      const logIndex = releaseLogs.findIndex(l => l.id === logId);
+      if (logIndex === -1) return;
+
+      const log = releaseLogs[logIndex];
+      if (!confirm(`이 사용 내역을 취소하시겠습니까?\n[${log.dept}] ${log.itemName} ${log.qty}${log.unit} (${log.timestamp})\n\n※ 취소 시 차감되었던 수량(${log.qty}${log.unit})이 현재 재고로 다시 복구됩니다.`)) {
+        return;
+      }
+
+      // Restore stock to item
+      const item = items.find(i => i.id === log.itemId);
+      if (item) {
+        item.stockQty += log.qty;
+        item.outflowQty = Math.max(0, item.outflowQty - log.qty);
+        if (item.location === "사용완료" && item.stockQty > 0) {
+          item.location = "1층 창고";
+        }
+      }
+
+      // Remove log
+      releaseLogs.splice(logIndex, 1);
+      saveData();
+
+      if (activeModalItemId && item && activeModalItemId === item.id) {
+        document.getElementById("detailStockCount").innerText = `${item.stockQty.toLocaleString()} ${item.unit}`;
+        document.getElementById("detailTotalOutflow").innerText = `${item.outflowQty.toLocaleString()} ${item.unit}`;
+        renderItemHistoryList(item.id);
+      }
+
+      renderCards();
+      updateTotalStats();
+      showToast("사용 내역이 취소되고 재고가 원상 복구되었습니다.");
+    }
+
+    /* Render Item History Timeline with Cancel Button */
     function renderItemHistoryList(itemId) {
       const container = document.getElementById("detailHistoryList");
       const filtered = releaseLogs.filter(l => l.itemId === itemId);
@@ -2826,7 +3091,7 @@
       document.getElementById("itemHistoryCountBadge").innerText = `총 ${filtered.length}건`;
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div style="padding:16px; text-align:center; color:var(--color-foggy); font-size:13px;">아직 사용 이력이 없습니다.</div>`;
+        container.innerHTML = `<div style="padding:16px; text-align:center; color:var(--color-foggy); font-size:13px;">등록된 사용 이력이 없습니다.</div>`;
         return;
       }
 
@@ -2836,9 +3101,10 @@
             <span class="history-dept-badge">${log.dept}</span>
             <span style="font-weight:600; color:var(--color-hof);">${log.purpose}</span>
           </div>
-          <div style="display:flex; align-items:center; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
             <span class="history-qty-badge">${log.qty.toLocaleString()} ${log.unit}</span>
-            <span class="history-date">${log.timestamp}</span>
+            <span class="history-date">📅 ${log.timestamp}</span>
+            <button class="btn-cancel-log" onclick="cancelReleaseLog('${log.id}')" title="이 사용 내역 취소 (수량 원상 복구)">✕ 취소</button>
           </div>
         </div>
       `).join("");
