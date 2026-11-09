@@ -1,0 +1,2962 @@
+[index.html](https://github.com/user-attachments/files/34569928/index.html)
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>화성시남부노인복지관 후원물품 수입·사용 관리대장 (2026.11.09 최신화)</title>
+  <!-- Pretendard Web Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <!-- SheetJS for Excel Download -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM TOKENS (Based on Airbnb Light Theme)
+       ========================================================================== */
+    :root {
+      --color-rausch: #ff385c;
+      --color-rausch-600: #e00b41;
+      --color-hof: #222222;
+      --color-foggy: #6a6a6a;
+      --color-grey-500: #c1c1c1;
+      --color-bebe: #ebebeb;
+      --color-deco: #dddddd;
+      --color-faint: #f7f7f7;
+      --color-white: #ffffff;
+      --color-success: #008a05;
+      --color-success-bg: #eafbe7;
+      --color-warning: #c25e00;
+      --color-warning-bg: #fff5e6;
+      --color-danger: #c13515;
+      --color-danger-bg: #fdf0ed;
+
+      --font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Segoe UI", sans-serif;
+
+      --radius-sm: 6px;
+      --radius-inputs: 8px;
+      --radius-cards: 14px;
+      --radius-pill: 9999px;
+
+      --shadow-subtle: 0px 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px 0px rgba(0, 0, 0, 0.04), 0px 4px 8px 0px rgba(0, 0, 0, 0.06);
+      --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.06);
+      --shadow-modal: 0 16px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--color-white);
+      color: var(--color-hof);
+      line-height: 1.45;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       TOP NAVIGATION BAR
+       ========================================================================== */
+    .top-header {
+      height: 80px;
+      background-color: var(--color-white);
+      border-bottom: 1px solid var(--color-bebe);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 16px;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      flex-shrink: 0;
+    }
+
+    .brand-logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--color-rausch), var(--color-rausch-600));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: 22px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(255, 56, 92, 0.35);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-hof);
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .version-tag {
+      font-size: 11px;
+      background: #eef7ee;
+      color: #008a05;
+      border: 1px solid #bce6bc;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--color-foggy);
+      font-weight: 400;
+      margin-top: 1px;
+    }
+
+    /* Floating Center Search Capsule */
+    .nav-search-capsule {
+      background: var(--color-white);
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      align-items: center;
+      padding: 6px 8px 6px 18px;
+      max-width: 460px;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .nav-search-capsule:focus-within {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      border-color: var(--color-hof);
+    }
+
+    .search-input {
+      border: none;
+      outline: none;
+      font-family: var(--font-family);
+      font-size: 14px;
+      color: var(--color-hof);
+      width: 100%;
+      background: transparent;
+    }
+
+    .search-input::placeholder {
+      color: var(--color-foggy);
+    }
+
+    .search-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-rausch);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .search-icon-btn:hover {
+      background: var(--color-rausch-600);
+      transform: scale(1.05);
+    }
+
+    /* Right Header Actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      background: var(--color-white);
+      color: var(--color-hof);
+      border: 1px solid var(--color-bebe);
+    }
+
+    .btn-outline:hover {
+      background: var(--color-faint);
+      border-color: var(--color-hof);
+    }
+
+    .btn-rausch {
+      background: var(--color-rausch);
+      color: var(--color-white);
+    }
+
+    .btn-rausch:hover {
+      background: var(--color-rausch-600);
+      box-shadow: 0 2px 8px rgba(255, 56, 92, 0.3);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    /* ==========================================================================
+       CATEGORY BAR & WAREHOUSE FILTERS
+       ========================================================================== */
+    .filter-section {
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-bebe);
+      padding: 12px 32px 14px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: sticky;
+      top: 80px;
+      z-index: 90;
+    }
+
+    .category-tabs {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+
+    .category-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      color: var(--color-foggy);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cat-tab-item:hover {
+      color: var(--color-hof);
+      border-bottom-color: var(--color-bebe);
+    }
+
+    .cat-tab-item.active {
+      color: var(--color-hof);
+      border-bottom-color: var(--color-hof);
+      font-weight: 700;
+    }
+
+    .cat-tab-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .cat-tab-label {
+      font-size: 12px;
+    }
+
+    /* Warehouse Location Filter Pills */
+    .warehouse-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-top: 4px;
+      border-top: 1px solid #f2f2f2;
+    }
+
+    .warehouse-pills-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .warehouse-pill {
+      background: var(--color-faint);
+      color: var(--color-foggy);
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-pill);
+      padding: 5px 13px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .warehouse-pill:hover {
+      background: #eeeeee;
+      color: var(--color-hof);
+    }
+
+    .warehouse-pill.active {
+      background: var(--color-hof);
+      color: var(--color-white);
+      border-color: var(--color-hof);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       MAIN CONTAINER & AIRBNB CARDS GRID
+       ========================================================================== */
+    .main-container {
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 32px 80px 32px;
+      flex: 1;
+    }
+
+    .summary-stats-banner {
+      background: #fdfdfd;
+      border: 1px solid var(--color-bebe);
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .stats-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stat-badge-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .stat-badge-box .label {
+      color: var(--color-foggy);
+    }
+
+    .stat-badge-box .value {
+      font-weight: 700;
+      color: var(--color-hof);
+      font-size: 15px;
+    }
+
+    .stat-badge-box .value.highlight {
+      color: var(--color-rausch);
+    }
+
+    .section-headline {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .headline-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-hof);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .headline-count {
+      font-size: 13px;
+      color: var(--color-foggy);
+      font-weight: 500;
+    }
+
+    /* Card Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 26px 20px;
+    }
+
+    /* Listing Card */
+    .item-card {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      background: transparent;
+      border-radius: var(--radius-cards);
+      transition: transform 0.18s ease;
+      position: relative;
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Photo Box (1:1 Ratio) */
+    .card-photo-box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-cards);
+      overflow: hidden;
+      background-color: var(--color-faint);
+      position: relative;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .item-card:hover .card-img {
+      transform: scale(1.04);
+    }
+
+    /* Location Pill */
+    .badge-location-pill {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(4px);
+      color: var(--color-hof);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      z-index: 5;
+    }
+
+    .badge-stock-pill {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(34, 34, 34, 0.88);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      backdrop-filter: blur(2px);
+      z-index: 5;
+    }
+
+    .badge-stock-pill.low {
+      background: rgba(194, 94, 0, 0.92);
+    }
+
+    .badge-stock-pill.out {
+      background: rgba(100, 100, 100, 0.88);
+    }
+
+    /* Card Photo Change Button */
+    .card-photo-change-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(4px);
+      color: var(--color-hof);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      z-index: 10;
+    }
+
+    .card-photo-change-btn:hover {
+      background: var(--color-hof);
+      color: var(--color-white);
+      transform: scale(1.05);
+    }
+
+    /* Card Info */
+    .card-body {
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-item-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--color-hof);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-category-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-foggy);
+      background: #f0f0f0;
+      padding: 1px 6px;
+      border-radius: var(--radius-pill);
+      flex-shrink: 0;
+    }
+
+    .card-sub-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      color: var(--color-foggy);
+    }
+
+    .card-donor {
+      font-size: 12px;
+      color: var(--color-foggy);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-stock-highlight {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--color-hof);
+      margin-top: 1px;
+    }
+
+    .card-recent-release {
+      font-size: 11.5px;
+      color: #666;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: var(--color-faint);
+      padding: 3px 7px;
+      border-radius: 6px;
+    }
+
+    /* ==========================================================================
+       MODAL SYSTEM
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--color-white);
+      border-radius: 16px;
+      box-shadow: var(--shadow-modal);
+      width: 100%;
+      max-width: 820px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--color-bebe);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-hof);
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-foggy);
+      transition: all 0.15s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--color-faint);
+      color: var(--color-hof);
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--color-bebe);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #fafafa;
+    }
+
+    /* Modal Form Controls */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-hof);
+      margin-bottom: 6px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: var(--font-family);
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-inputs);
+      background: var(--color-white);
+      color: var(--color-hof);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--color-hof);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Quick Suggestion Chips */
+    .chips-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .purpose-chip {
+      background: var(--color-faint);
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-pill);
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--color-hof);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .purpose-chip:hover {
+      background: #eee;
+      border-color: var(--color-grey-500);
+    }
+
+    /* Quantity Stepper */
+    .stepper-box {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--color-bebe);
+      border-radius: var(--radius-inputs);
+      overflow: hidden;
+    }
+
+    .stepper-btn {
+      width: 38px;
+      height: 38px;
+      background: var(--color-faint);
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--color-hof);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.12s ease;
+    }
+
+    .stepper-btn:hover {
+      background: #e2e2e2;
+    }
+
+    .stepper-input {
+      width: 60px;
+      height: 38px;
+      border: none;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-hof);
+      outline: none;
+    }
+
+    /* History Timeline inside Modal */
+    .history-card-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--color-faint);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .history-dept-badge {
+      font-weight: 700;
+      color: var(--color-hof);
+      background: #e9ecef;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+    }
+
+    .history-qty-badge {
+      font-weight: 700;
+      color: var(--color-rausch);
+    }
+
+    .history-date {
+      color: var(--color-foggy);
+      font-size: 12px;
+    }
+
+    /* Table inside Full Ledger Modal */
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .ledger-table th {
+      background: #f7f7f7;
+      padding: 10px 14px;
+      font-weight: 700;
+      color: var(--color-hof);
+      border-bottom: 1px solid var(--color-bebe);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .ledger-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--color-bebe);
+      color: #333;
+    }
+
+    .ledger-table tr:hover {
+      background: #fafafa;
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--color-hof);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      animation: toastIn 0.2s ease;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Empty State */
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--color-foggy);
+      grid-column: 1 / -1;
+    }
+
+    /* Print Styles (결과보고서 제출용 깔끔 출력) */
+    @media print {
+      .top-header, .filter-section, .header-actions, .card-photo-change-btn, .no-print {
+        display: none !important;
+      }
+      body {
+        background: white;
+      }
+      .summary-stats-banner {
+        border: 1px solid #000;
+      }
+      .cards-grid {
+        display: block !important;
+      }
+      .item-card {
+        page-break-inside: avoid;
+        border: 1px solid #ccc;
+        margin-bottom: 12px;
+        padding: 8px;
+        flex-direction: row;
+        gap: 16px;
+      }
+      .card-photo-box {
+        width: 100px;
+        height: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden global file input for instant card photo replacement -->
+  <input type="file" id="globalCardPhotoInput" accept="image/*" style="display:none;" onchange="handleGlobalCardPhotoUpload(event)">
+
+  <!-- Toast Notification -->
+  <div id="appToast" class="toast-msg">
+    <span>📷</span> <span id="appToastText">사진이 변경되었습니다.</span>
+  </div>
+
+  <!-- ==========================================================================
+       1. TOP HEADER (Airbnb Style)
+       ========================================================================== -->
+  <header class="top-header">
+    <div class="brand-area" onclick="resetFilters()">
+      <div class="brand-logo-icon">화</div>
+      <div>
+        <div class="brand-title">
+          화성시남부노인복지관 후원물품 관리대장
+          <span class="version-tag">2026.11.09 최신화</span>
+        </div>
+        <div class="brand-subtitle">후원물품 재고 및 부서별 사용 현황 종합 대장</div>
+      </div>
+    </div>
+
+    <!-- Center Search Capsule -->
+    <div class="nav-search-capsule no-print">
+      <input type="text" id="globalSearchInput" class="search-input" placeholder="어떤 후원물품을 찾으시나요? (품명, 후원자, 보관위치 검색)" oninput="filterItems()">
+      <button class="search-icon-btn" onclick="filterItems()" title="검색">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+    </div>
+
+    <!-- Right Header Actions -->
+    <div class="header-actions no-print">
+      <button class="btn btn-outline" onclick="exportUpdatedHtml()" style="background:#008a05; color:#ffffff; border:none; font-weight:700; box-shadow:0 2px 8px rgba(0,138,5,0.3);" title="내가 변경한 모든 사진과 재고를 다른 사람 컴퓨터에서도 볼 수 있게 새 파일로 저장">
+        💾 사진 영구반영 (HTML 저장)
+      </button>
+
+      <button class="btn btn-rausch" onclick="openAddItemModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        후원물품 수입 등록
+      </button>
+
+      <button class="btn btn-outline" onclick="openLedgerModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        전체 사용대장
+      </button>
+
+      <button class="btn btn-outline" onclick="exportToExcel()" title="재고 및 사용대장 엑셀 다운로드">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        엑셀 저장
+      </button>
+
+      <button class="btn btn-outline" onclick="window.print()" title="결과보고서 첨부용 인쇄">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        보고서 인쇄
+      </button>
+
+      <button class="btn btn-outline btn-sm" onclick="resetToLatestData()" title="2026.11.09 공식 재고 데이터로 초기화" style="color:var(--color-foggy);">
+        🔄 데이터 최신화 복원
+      </button>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       2. AIRBNB CATEGORY BAR & WAREHOUSE FILTERS
+       ========================================================================== -->
+  <section class="filter-section no-print">
+    <!-- Category Tabs with Icons -->
+    <div class="category-tabs" id="categoryTabsContainer">
+      <button class="cat-tab-item active" onclick="selectCategory('전체')">
+        <span class="cat-tab-icon">✨</span>
+        <span class="cat-tab-label">전체 (55)</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('식품')">
+        <span class="cat-tab-icon">🍜</span>
+        <span class="cat-tab-label">식품·건기식</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('생활용품')">
+        <span class="cat-tab-icon">🧴</span>
+        <span class="cat-tab-label">생활·안전용품</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('잡화')">
+        <span class="cat-tab-icon">🛍️</span>
+        <span class="cat-tab-label">잡화·용품</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('도서')">
+        <span class="cat-tab-icon">📚</span>
+        <span class="cat-tab-label">도서·사무용품</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('가구')">
+        <span class="cat-tab-icon">🪑</span>
+        <span class="cat-tab-label">가구·가전</span>
+      </button>
+      <button class="cat-tab-item" onclick="selectCategory('기타')">
+        <span class="cat-tab-icon">🎟️</span>
+        <span class="cat-tab-label">상품권·기타</span>
+      </button>
+    </div>
+
+    <!-- Warehouse Pills -->
+    <div class="warehouse-pills-row" id="warehousePillsContainer">
+      <button class="warehouse-pill active" onclick="selectWarehouse('전체')">전체 창고</button>
+      <button class="warehouse-pill" onclick="selectWarehouse('1층 창고')">1층 창고</button>
+      <button class="warehouse-pill" onclick="selectWarehouse('3층 창고')">3층 창고</button>
+      <button class="warehouse-pill" onclick="selectWarehouse('공유냉장고')">공유냉장고</button>
+      <button class="warehouse-pill" onclick="selectWarehouse('공유냉장고 옆 서랍')">공유냉장고 옆 서랍</button>
+      <button class="warehouse-pill" onclick="selectWarehouse('MDF실')">MDF실</button>
+      <button class="warehouse-pill" onclick="selectWarehouse('지하탁구장')">지하탁구장</button>
+      <button class="warehouse-pill" onclick="selectWarehouse('금고')">금고</button>
+      <button class="warehouse-pill" onclick="selectWarehouse('사용완료')">사용완료 품목</button>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       3. MAIN CONTENT: STATS BANNER & CARDS GRID
+       ========================================================================== -->
+  <main class="main-container">
+
+    <!-- Summary Stats Banner -->
+    <div class="summary-stats-banner">
+      <div class="stats-group">
+        <div class="stat-badge-box">
+          <span class="label">총 관리 품목:</span>
+          <span class="value" id="statTotalItems">55개 품목</span>
+        </div>
+        <div class="stat-badge-box">
+          <span class="label">총 입고 누적:</span>
+          <span class="value">46,209개</span>
+        </div>
+        <div class="stat-badge-box">
+          <span class="label">총 출고/사용:</span>
+          <span class="value">38,782개</span>
+        </div>
+        <div class="stat-badge-box">
+          <span class="label">현재 보관 재고:</span>
+          <span class="value highlight" id="statTotalStock">7,427개</span>
+        </div>
+      </div>
+      <div style="font-size:12px; color:var(--color-foggy);">
+        📌 기준일자: <strong>2026.11.09 최신화 기준</strong> (화성시남부노인복지관)
+      </div>
+    </div>
+
+    <!-- Section Headline -->
+    <div class="section-headline">
+      <h2 class="headline-title" id="headlineTitle">
+        <span>후원물품 현황</span>
+      </h2>
+      <span class="headline-count" id="itemCountDisplay">총 55개 물품</span>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="cards-grid" id="itemsGrid">
+      <!-- Dynamically Rendered by JavaScript -->
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       4. ITEM DETAIL & USAGE REGISTRATION MODAL
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modalDetail">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="detailItemName">품목 상세 정보 및 물품 사용</div>
+        <button class="modal-close-btn" onclick="closeModal('modalDetail')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:24px;">
+          <!-- Photo Box in Modal -->
+          <div style="width:220px; height:220px; border-radius:12px; overflow:hidden; position:relative; flex-shrink:0; background:#f0f0f0;">
+            <img id="detailItemImg" src="" style="width:100%; height:100%; object-fit:cover;">
+            <button class="card-photo-change-btn" id="modalChangePhotoBtn" onclick="triggerCardPhotoUploadFromModal()">
+              📷 사진 넣기/변경
+            </button>
+          </div>
+
+          <!-- Metadata Box -->
+          <div style="flex:1; min-width:240px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                <span id="detailItemCategory" class="card-category-tag">식품</span>
+                <span id="detailItemLocation" style="font-size:12px; font-weight:700; color:var(--color-hof); background:#f0f0f0; padding:2px 8px; border-radius:var(--radius-pill);">📍 1층 창고</span>
+              </div>
+              <h3 id="detailItemFullName" style="font-size:20px; font-weight:800; margin-bottom:8px; color:var(--color-hof);"></h3>
+              <div style="font-size:13px; color:var(--color-foggy); line-height:1.7;">
+                <div>후원처: <strong id="detailItemDonor" style="color:var(--color-hof);"></strong></div>
+                <div>수입일자: <span id="detailItemDate"></span></div>
+                <div id="detailAmountRow" style="display:none;">장부금액: <span id="detailItemAmount"></span></div>
+                <div>비고: <span id="detailItemRemarks" style="color:#555;"></span></div>
+              </div>
+            </div>
+
+            <!-- Stock Summary Highlight -->
+            <div style="background:var(--color-faint); padding:12px 16px; border-radius:10px; display:flex; gap:20px; align-items:center; margin-top:10px;">
+              <div>
+                <div style="font-size:11px; color:var(--color-foggy);">총 수입누적</div>
+                <div id="detailTotalInflow" style="font-size:15px; font-weight:700; color:var(--color-hof);"></div>
+              </div>
+              <div>
+                <div style="font-size:11px; color:var(--color-foggy);">총 사용누적</div>
+                <div id="detailTotalOutflow" style="font-size:15px; font-weight:700; color:var(--color-hof);"></div>
+              </div>
+              <div>
+                <div style="font-size:11px; color:var(--color-foggy); font-weight:700;">현재 보관 재고</div>
+                <div id="detailStockCount" style="font-size:20px; font-weight:800; color:var(--color-rausch);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr style="border:none; border-top:1px solid var(--color-bebe); margin:20px 0;">
+
+        <!-- Usage Registration Form -->
+        <div style="background:#fff9fa; border:1px solid #ffd8e0; border-radius:12px; padding:18px; margin-bottom:24px;">
+          <h4 style="font-size:15px; font-weight:700; color:var(--color-rausch-600); margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+            <span>✨ 물품 사용(반출) 등록</span>
+            <span style="font-size:12px; font-weight:400; color:var(--color-foggy);">(등록 즉시 재고가 자동 차감됩니다)</span>
+          </h4>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">사용 부서</label>
+              <select id="takeoutDept" class="form-select" onchange="toggleCustomDeptInput()">
+                <option value="운영지원팀">운영지원팀</option>
+                <option value="사회참여팀">사회참여팀</option>
+                <option value="문화복지팀">문화복지팀</option>
+                <option value="지역돌봄팀">지역돌봄팀</option>
+                <option value="주간보호센터">주간보호센터</option>
+                <option value="타기관">타기관 (직접 입력)</option>
+              </select>
+              <input type="text" id="customDeptInput" class="form-input" placeholder="기관명 직접 입력 (예: 남양노인복지관)" style="display:none; margin-top:6px;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">사용 수량</label>
+              <div class="stepper-box">
+                <button type="button" class="stepper-btn" onclick="adjustQty(-1)">−</button>
+                <input type="number" id="takeoutQty" class="stepper-input" value="1" min="1">
+                <button type="button" class="stepper-btn" onclick="adjustQty(1)">+</button>
+              </div>
+              <span id="takeoutUnitSpan" style="font-size:13px; font-weight:600; margin-left:8px; color:var(--color-foggy);">개</span>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label">사용 목적 / 배부 대상</label>
+            <input type="text" id="takeoutPurpose" class="form-input" placeholder="어떤 목적으로 사용하시나요? (예: 온정나눔 공유냉장고 채움, 어르신 프로그램 지원)">
+            
+            <div class="chips-group">
+              <span class="purpose-chip" onclick="setPurpose('공유냉장고 채움')">공유냉장고 채움</span>
+              <span class="purpose-chip" onclick="setPurpose('취약계층 어르신 가정 나눔')">취약계층 어르신 나눔</span>
+              <span class="purpose-chip" onclick="setPurpose('경로식당 주간 식재료 지원')">경로식당 조리</span>
+              <span class="purpose-chip" onclick="setPurpose('복지관 문화프로그램 참여자 배부')">프로그램 지원</span>
+              <span class="purpose-chip" onclick="setPurpose('노인맞춤돌봄 대상자 긴급지원')">긴급돌봄 구호</span>
+            </div>
+          </div>
+
+          <button class="btn btn-rausch" style="width:100%; justify-content:center; padding:11px; font-size:14px;" onclick="submitTakeout()">
+            ✓ 물품 사용 확정 및 재고 차감
+          </button>
+        </div>
+
+        <!-- History Timeline -->
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+            <h4 style="font-size:15px; font-weight:700; color:var(--color-hof);">이 품목의 최근 사용 이력</h4>
+            <span id="itemHistoryCountBadge" style="font-size:12px; color:var(--color-foggy);">총 0건</span>
+          </div>
+          <div id="detailHistoryList">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modalDetail')">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       5. ADD NEW ITEM MODAL (후원물품 신규 수입 등록)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modalAddItem">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">후원물품 신규 수입 등록</div>
+        <button class="modal-close-btn" onclick="closeModal('modalAddItem')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Photo Upload Preview -->
+        <div class="form-group" style="text-align:center;">
+          <div style="width:140px; height:140px; border:2px dashed var(--color-bebe); border-radius:12px; margin:0 auto 10px auto; display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden; background:var(--color-faint); position:relative;" onclick="document.getElementById('newItemPhotoInput').click()">
+            <img id="newItemPreviewImg" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+            <div id="newItemPreviewText" style="font-size:12px; color:var(--color-foggy); display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <span style="font-size:24px;">📷</span>
+              <span>물품 사진 선택</span>
+            </div>
+          </div>
+          <input type="file" id="newItemPhotoInput" accept="image/*" style="display:none;" onchange="handleNewItemPhoto(event)">
+          <div style="font-size:11px; color:var(--color-foggy);">사진이 없어도 카테고리에 맞는 기본 사진이 자동으로 지정됩니다.</div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">후원물품 품명 *</label>
+            <input type="text" id="addName" class="form-input" placeholder="예: 해들찬 백미 10kg">
+          </div>
+          <div class="form-group">
+            <label class="form-label">물품 분류 *</label>
+            <select id="addCategory" class="form-select">
+              <option value="식품">식품</option>
+              <option value="건강기능식품">건강기능식품</option>
+              <option value="생활용품">생활용품</option>
+              <option value="잡화">잡화</option>
+              <option value="도서">도서</option>
+              <option value="가구">가구</option>
+              <option value="사무용품">사무용품</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label class="form-label">보관 창고 *</label>
+            <select id="addLocation" class="form-select">
+              <option value="1층 창고">1층 창고</option>
+              <option value="3층 창고">3층 창고</option>
+              <option value="공유냉장고">공유냉장고</option>
+              <option value="공유냉장고 옆 서랍">공유냉장고 옆 서랍</option>
+              <option value="MDF실">MDF실</option>
+              <option value="지하탁구장">지하탁구장</option>
+              <option value="금고">금고</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">수입 수량 *</label>
+            <input type="number" id="addQty" class="form-input" placeholder="수량 입력" min="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">단위 *</label>
+            <input type="text" id="addUnit" class="form-input" placeholder="개, 박스, 포, 세트 등" value="개">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">후원자 / 후원처 명</label>
+            <input type="text" id="addDonor" class="form-input" placeholder="예: 화성상공회의소">
+          </div>
+          <div class="form-group">
+            <label class="form-label">수입 일자</label>
+            <input type="date" id="addDate" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">비고 / 보관 용도</label>
+          <input type="text" id="addRemarks" class="form-input" placeholder="특이사항 또는 지원 용도 입력">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modalAddItem')">취소</button>
+        <button class="btn btn-rausch" onclick="submitNewItem()">수입 등록 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       6. FULL USAGE LEDGER MODAL (전체 사용대장)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modalLedger">
+    <div class="modal-card" style="max-width:980px;">
+      <div class="modal-header">
+        <div class="modal-title">화성시남부노인복지관 후원물품 사용대장 (전체 이력)</div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-outline btn-sm" onclick="exportToExcel()">엑셀 다운로드</button>
+          <button class="modal-close-btn" onclick="closeModal('modalLedger')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding:0;">
+        <div style="overflow-x:auto; max-height:65vh;">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>사용일시</th>
+                <th>사용 부서</th>
+                <th>품명</th>
+                <th>사용 수량</th>
+                <th>보관 창고</th>
+                <th>사용 목적</th>
+                <th>담당자</th>
+              </tr>
+            </thead>
+            <tbody id="fullLedgerTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT APPLICATION LOGIC
+       ========================================================================== -->
+  <script>
+    const STORAGE_KEY_ITEMS = "hsnambu_airbnb_items_20261109";
+    const STORAGE_KEY_LOGS = "hsnambu_airbnb_logs_20261109";
+
+    /* ==========================================================================
+       OFFICIAL DATA: 2026.11.09 최신화 기준 55개 품목 데이터셋
+       ========================================================================== */
+    const OFFICIAL_ITEMS_20261109 = [
+      {
+        id: "item-1",
+        no: 1,
+        name: "가든멈",
+        category: "기타",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-10-28",
+        inflowQty: 500,
+        outflowQty: 0,
+        stockQty: 500,
+        inflowAmount: 4500000,
+        stockAmount: 4500000,
+        donor: "단암",
+        img: "https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=600&q=80",
+        remarks: "가든멈 국화 화분 (사용완료 처리됨)"
+      },
+      {
+        id: "item-2",
+        no: 2,
+        name: "가든멈",
+        category: "기타",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-10-23",
+        inflowQty: 500,
+        outflowQty: 0,
+        stockQty: 500,
+        inflowAmount: 4500000,
+        stockAmount: 4500000,
+        donor: "단암",
+        img: "https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=600&q=80",
+        remarks: "가든멈 국화 화분 (사용완료 처리됨)"
+      },
+      {
+        id: "item-3",
+        no: 3,
+        name: "경옥고",
+        category: "식품",
+        location: "금고",
+        unit: "세트",
+        receivedDate: "2026-10-23",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 150000,
+        stockAmount: 150000,
+        donor: "화성한방병원",
+        img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80",
+        remarks: "화성한방병원 후원 전통 경옥고 (금고 안전보관)"
+      },
+      {
+        id: "item-4",
+        no: 4,
+        name: "사향공진단",
+        category: "식품",
+        location: "사용완료",
+        unit: "세트",
+        receivedDate: "2026-10-23",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 500000,
+        stockAmount: 500000,
+        donor: "화성한방병원",
+        img: "https://images.unsplash.com/photo-1514733670139-4d87a1941d55?auto=format&fit=crop&w=600&q=80",
+        remarks: "사향공진단 세트 (사용완료 처리됨)"
+      },
+      {
+        id: "item-5",
+        no: 5,
+        name: "가든멈(분홍)",
+        category: "기타",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-10-20",
+        inflowQty: 500,
+        outflowQty: 0,
+        stockQty: 500,
+        inflowAmount: 4500000,
+        stockAmount: 4500000,
+        donor: "단암",
+        img: "https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=600&q=80",
+        remarks: "분홍 가든멈 화분 (사용완료 처리됨)"
+      },
+      {
+        id: "item-6",
+        no: 6,
+        name: "광동 아이점프-X(90정)",
+        category: "건강기능식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-09-29",
+        inflowQty: 1000,
+        outflowQty: 0,
+        stockQty: 1000,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "화성시복지재단",
+        img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
+        remarks: "화성시복지재단 지원 건강영양제 (사용완료 처리됨)"
+      },
+      {
+        id: "item-7",
+        no: 7,
+        name: "햅쌀(10kg)",
+        category: "식품",
+        location: "사용완료",
+        unit: "포",
+        receivedDate: "2026-09-21",
+        inflowQty: 15,
+        outflowQty: 0,
+        stockQty: 15,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "화성특례시의회",
+        img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+        remarks: "화성특례시의회 후원 햅쌀 10kg (사용완료 처리됨)"
+      },
+      {
+        id: "item-8",
+        no: 8,
+        name: "진 배추김치 1.2kg",
+        category: "식품",
+        location: "사용완료",
+        unit: "Kg",
+        receivedDate: "2026-09-16",
+        inflowQty: 60,
+        outflowQty: 49,
+        stockQty: 11,
+        inflowAmount: 645000,
+        stockAmount: 118250,
+        donor: "선농종합식품(주)",
+        img: "https://images.unsplash.com/photo-1583032015879-63321516e91f?auto=format&fit=crop&w=600&q=80",
+        remarks: "선농종합식품 배추김치 (사용완료 처리됨)"
+      },
+      {
+        id: "item-9",
+        no: 9,
+        name: "온누리상품권",
+        category: "상품권(이용권)",
+        location: "금고",
+        unit: "장",
+        receivedDate: "2026-09-15",
+        inflowQty: 100,
+        outflowQty: 0,
+        stockQty: 100,
+        inflowAmount: 1000000,
+        stockAmount: 1000000,
+        donor: "한국주택금융공사",
+        img: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=600&q=80",
+        remarks: "온누리상품권 1만원권 100장 (금고 안전보관)"
+      },
+      {
+        id: "item-10",
+        no: 10,
+        name: "네이비 모자(MKG5AC3011D DBL)",
+        category: "잡화",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-09-04",
+        inflowQty: 871,
+        outflowQty: 862,
+        stockQty: 9,
+        inflowAmount: 13065000,
+        stockAmount: 135000,
+        donor: "주식회사 지브이(GV CO.,Ltd.)",
+        img: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=600&q=80",
+        remarks: "GV 네이비 모자 (사용완료 처리됨)"
+      },
+      {
+        id: "item-11",
+        no: 11,
+        name: "라벤더 신주머니(DTS60UP62M)",
+        category: "잡화",
+        location: "1층 창고, 3층 창고",
+        unit: "개",
+        receivedDate: "2026-09-04",
+        inflowQty: 628,
+        outflowQty: 593,
+        stockQty: 35,
+        inflowAmount: 12560000,
+        stockAmount: 700000,
+        donor: "주식회사 지브이(GV CO.,Ltd.)",
+        img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80",
+        remarks: "1층 창고 및 3층 창고 분산 보관"
+      },
+      {
+        id: "item-12",
+        no: 12,
+        name: "라벤더백팩(DTS60UP52M)",
+        category: "잡화",
+        location: "1층 창고",
+        unit: "개",
+        receivedDate: "2026-09-04",
+        inflowQty: 754,
+        outflowQty: 709,
+        stockQty: 45,
+        inflowAmount: 37700000,
+        stockAmount: 2250000,
+        donor: "주식회사 지브이(GV CO.,Ltd.)",
+        img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80",
+        remarks: "GV 라벤더 백팩 가방 (1층 창고 보관)"
+      },
+      {
+        id: "item-13",
+        no: 13,
+        name: "레쓰비 마일드 캔커피200ml X 90캔",
+        category: "식품",
+        location: "지하탁구장",
+        unit: "Box",
+        receivedDate: "2026-08-12",
+        inflowQty: 11,
+        outflowQty: 10,
+        stockQty: 1,
+        inflowAmount: 345510,
+        stockAmount: 31410,
+        donor: "김수기",
+        img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
+        remarks: "지하탁구장 이용 어르신 나눔 및 행사용"
+      },
+      {
+        id: "item-14",
+        no: 14,
+        name: "해피바스 오리지널컬렉션 체리블로섬바디워시",
+        category: "생활용품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-06-26",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "무명",
+        img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
+        remarks: "바디워시 (사용완료 처리됨)"
+      },
+      {
+        id: "item-15",
+        no: 15,
+        name: "동원참치 살코기 135g",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-06-11",
+        inflowQty: 3,
+        outflowQty: 0,
+        stockQty: 3,
+        inflowAmount: 6900,
+        stockAmount: 6900,
+        donor: "윤은미",
+        img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 상온 보관"
+      },
+      {
+        id: "item-16",
+        no: 16,
+        name: "리챔 오리지날 200g",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-06-11",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 4680,
+        stockAmount: 4680,
+        donor: "윤은미",
+        img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 상온 보관"
+      },
+      {
+        id: "item-17",
+        no: 17,
+        name: "씨제이제일제당(주)스팸 25% 라이트 200g",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-05-26",
+        inflowQty: 3,
+        outflowQty: 0,
+        stockQty: 3,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "무명",
+        img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 상온 보관"
+      },
+      {
+        id: "item-18",
+        no: 18,
+        name: "씨제이제일제당(주)스팸 클래식 200g",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-05-26",
+        inflowQty: 6,
+        outflowQty: 0,
+        stockQty: 6,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "무명",
+        img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 상온 보관"
+      },
+      {
+        id: "item-19",
+        no: 19,
+        name: "동원에프앤비 리챔 오리지날 340g",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-05-08",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 3240,
+        stockAmount: 3240,
+        donor: "이유정",
+        img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 상온 보관"
+      },
+      {
+        id: "item-20",
+        no: 20,
+        name: "씨제이제일제당(주) 스팸 클래식 200g",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-05-08",
+        inflowQty: 3,
+        outflowQty: 0,
+        stockQty: 3,
+        inflowAmount: 6600,
+        stockAmount: 6600,
+        donor: "이유정",
+        img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 상온 보관"
+      },
+      {
+        id: "item-21",
+        no: 21,
+        name: "씨제이제일제당(주) 스팸 클래식 340g",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-05-08",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 3820,
+        stockAmount: 3820,
+        donor: "이유정",
+        img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 상온 보관"
+      },
+      {
+        id: "item-22",
+        no: 22,
+        name: "목향공진단",
+        category: "식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-04-28",
+        inflowQty: 2,
+        outflowQty: 1,
+        stockQty: 1,
+        inflowAmount: 500000,
+        stockAmount: 250000,
+        donor: "화성한방병원",
+        img: "https://images.unsplash.com/photo-1514733670139-4d87a1941d55?auto=format&fit=crop&w=600&q=80",
+        remarks: "화성한방병원 후원 (사용완료 처리됨)"
+      },
+      {
+        id: "item-23",
+        no: 23,
+        name: "소고기 해장국밥",
+        category: "식품",
+        location: "공유냉장고",
+        unit: "개",
+        receivedDate: "2026-04-24",
+        inflowQty: 29,
+        outflowQty: 4,
+        stockQty: 25,
+        inflowAmount: 145000,
+        stockAmount: 125000,
+        donor: "사자킹",
+        img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+        remarks: "문화복지팀 공유냉장고 즉시 배부용"
+      },
+      {
+        id: "item-24",
+        no: 24,
+        name: "동원에프앤비 동원참치 라이트 스탠다드 살코기 참치 150g",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-04-22",
+        inflowQty: 20,
+        outflowQty: 3,
+        stockQty: 17,
+        inflowAmount: 26000,
+        stockAmount: 22100,
+        donor: "김은비",
+        img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 보관"
+      },
+      {
+        id: "item-25",
+        no: 25,
+        name: "스팸 클래식",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-04-22",
+        inflowQty: 9,
+        outflowQty: 2,
+        stockQty: 7,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "이민지",
+        img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 보관"
+      },
+      {
+        id: "item-26",
+        no: 26,
+        name: "수향미 500G",
+        category: "식품",
+        location: "MDF실",
+        unit: "봉지",
+        receivedDate: "2026-04-16",
+        inflowQty: 200,
+        outflowQty: 83,
+        stockQty: 117,
+        inflowAmount: 600000,
+        stockAmount: 351000,
+        donor: "팔탄농업협동조합",
+        img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+        remarks: "팔탄농협 후원 수향미 소포장 (MDF실 보관)"
+      },
+      {
+        id: "item-27",
+        no: 27,
+        name: "오뚜기 단호박죽 258G",
+        category: "식품",
+        location: "공유냉장고 옆 서랍",
+        unit: "개",
+        receivedDate: "2026-04-14",
+        inflowQty: 2,
+        outflowQty: 0,
+        stockQty: 2,
+        inflowAmount: 3560,
+        stockAmount: 3560,
+        donor: "오지선",
+        img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+        remarks: "공유냉장고 옆 서랍 보관"
+      },
+      {
+        id: "item-28",
+        no: 28,
+        name: "청정원한우진곰탕 450G",
+        category: "식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-04-14",
+        inflowQty: 4,
+        outflowQty: 3,
+        stockQty: 1,
+        inflowAmount: 5920,
+        stockAmount: 1480,
+        donor: "오지선",
+        img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+        remarks: "한우진곰탕 (사용완료 처리됨)"
+      },
+      {
+        id: "item-29",
+        no: 29,
+        name: "햇반 발아현미밥 130G*6입 780.0G",
+        category: "식품",
+        location: "사용완료",
+        unit: "팩",
+        receivedDate: "2026-04-14",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 6180,
+        stockAmount: 6180,
+        donor: "오지선",
+        img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+        remarks: "햇반 발아현미밥 (사용완료 처리됨)"
+      },
+      {
+        id: "item-30",
+        no: 30,
+        name: "햇반 잡곡밥 130G*6입 780.0G",
+        category: "식품",
+        location: "사용완료",
+        unit: "팩",
+        receivedDate: "2026-04-14",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 6180,
+        stockAmount: 6180,
+        donor: "오지선",
+        img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+        remarks: "햇반 잡곡밥 (사용완료 처리됨)"
+      },
+      {
+        id: "item-31",
+        no: 31,
+        name: "썰은김치",
+        category: "식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-04-10",
+        inflowQty: 4,
+        outflowQty: 0,
+        stockQty: 4,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "오지선",
+        img: "https://images.unsplash.com/photo-1583032015879-63321516e91f?auto=format&fit=crop&w=600&q=80",
+        remarks: "썰은김치 (사용완료 처리됨)"
+      },
+      {
+        id: "item-32",
+        no: 32,
+        name: "명품 구운소금",
+        category: "식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-04-09",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "이영옥",
+        img: "https://images.unsplash.com/photo-1518110925495-5fe2fda0442c?auto=format&fit=crop&w=600&q=80",
+        remarks: "구운소금 (사용완료 처리됨)"
+      },
+      {
+        id: "item-33",
+        no: 33,
+        name: "바삭한 요리유",
+        category: "식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-04-09",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "이영옥",
+        img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80",
+        remarks: "요리유 (사용완료 처리됨)"
+      },
+      {
+        id: "item-34",
+        no: 34,
+        name: "알칼리 구운소금",
+        category: "식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-04-09",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "이영옥",
+        img: "https://images.unsplash.com/photo-1518110925495-5fe2fda0442c?auto=format&fit=crop&w=600&q=80",
+        remarks: "알칼리 구운소금 (사용완료 처리됨)"
+      },
+      {
+        id: "item-35",
+        no: 35,
+        name: "카놀라유",
+        category: "식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-04-09",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "이영옥",
+        img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80",
+        remarks: "카놀라유 (사용완료 처리됨)"
+      },
+      {
+        id: "item-36",
+        no: 36,
+        name: "프락토 올리고당",
+        category: "식품",
+        location: "사용완료",
+        unit: "개",
+        receivedDate: "2026-04-09",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "이영옥",
+        img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80",
+        remarks: "프락토 올리고당 (사용완료 처리됨)"
+      },
+      {
+        id: "item-37",
+        no: 37,
+        name: "걸어서 세계속으로 수필집",
+        category: "도서",
+        location: "1층 창고",
+        unit: "개",
+        receivedDate: "2026-02-27",
+        inflowQty: 3,
+        outflowQty: 0,
+        stockQty: 3,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "화성시사회복지협의회",
+        img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+        remarks: "어르신 교양 수필도서 (1층 창고 보관)"
+      },
+      {
+        id: "item-38",
+        no: 38,
+        name: "걸어서 역사속으로 수필집",
+        category: "도서",
+        location: "1층 창고",
+        unit: "개",
+        receivedDate: "2026-02-27",
+        inflowQty: 25,
+        outflowQty: 20,
+        stockQty: 5,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "화성시사회복지협의회",
+        img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+        remarks: "역사 수필도서 (1층 창고 보관)"
+      },
+      {
+        id: "item-39",
+        no: 39,
+        name: "아름순성인기저귀",
+        category: "생활용품",
+        location: "1층 창고",
+        unit: "Box",
+        receivedDate: "2026-02-02",
+        inflowQty: 6,
+        outflowQty: 4,
+        stockQty: 2,
+        inflowAmount: 240000,
+        stockAmount: 80000,
+        donor: "주식회사 아름산업",
+        img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
+        remarks: "성인용 안심 위생 기저귀 (1층 창고 보관)"
+      },
+      {
+        id: "item-40",
+        no: 40,
+        name: "이찬원 정규앨범 CD",
+        category: "기타",
+        location: "1층 창고",
+        unit: "개",
+        receivedDate: "2025-10-23",
+        inflowQty: 300,
+        outflowQty: 159,
+        stockQty: 141,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "경기도노인종합복지관협회",
+        img: "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=600&q=80",
+        remarks: "문화프로그램 및 어르신 나눔용 정규음반 (1층 창고 보관)"
+      },
+      {
+        id: "item-41",
+        no: 41,
+        name: "돋보기 안경세트",
+        category: "기타",
+        location: "1층 창고",
+        unit: "Box",
+        receivedDate: "2025-07-08",
+        inflowQty: 4,
+        outflowQty: 3,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "동탄올바른안과의원",
+        img: "https://images.unsplash.com/photo-1591076482161-42ce6da69f67?auto=format&fit=crop&w=600&q=80",
+        remarks: "시력보조 돋보기 안경세트 (1층 창고 보관)"
+      },
+      {
+        id: "item-42",
+        no: 42,
+        name: "부채",
+        category: "기타",
+        location: "1층 창고",
+        unit: "개",
+        receivedDate: "2025-07-08",
+        inflowQty: 500,
+        outflowQty: 250,
+        stockQty: 250,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "동탄올바른안과의원",
+        img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80",
+        remarks: "하절기 어르신 지원 부채 (1층 창고 보관)"
+      },
+      {
+        id: "item-43",
+        no: 43,
+        name: "라디에이터",
+        category: "가전제품",
+        location: "3층 창고",
+        unit: "Box",
+        receivedDate: "2025-04-18",
+        inflowQty: 2,
+        outflowQty: 0,
+        stockQty: 2,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "경기도노인종합복지관협회",
+        img: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=600&q=80",
+        remarks: "동절기 난방 지원 라디에이터 (3층 창고 보관)"
+      },
+      {
+        id: "item-44",
+        no: 44,
+        name: "책상",
+        category: "가구",
+        location: "3층 창고",
+        unit: "Box",
+        receivedDate: "2025-04-18",
+        inflowQty: 3,
+        outflowQty: 0,
+        stockQty: 3,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "경기도노인종합복지관협회",
+        img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=600&q=80",
+        remarks: "사무 및 프로그램용 책상 (3층 창고 보관)"
+      },
+      {
+        id: "item-45",
+        no: 45,
+        name: "책장",
+        category: "가구",
+        location: "3층 창고",
+        unit: "Box",
+        receivedDate: "2025-04-18",
+        inflowQty: 3,
+        outflowQty: 0,
+        stockQty: 3,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "경기도노인종합복지관협회",
+        img: "https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?auto=format&fit=crop&w=600&q=80",
+        remarks: "도서 및 서류 보관용 책장 (3층 창고 보관)"
+      },
+      {
+        id: "item-46",
+        no: 46,
+        name: "파티션",
+        category: "가구",
+        location: "3층 창고",
+        unit: "Box",
+        receivedDate: "2025-04-18",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "경기도노인종합복지관협회",
+        img: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80",
+        remarks: "공간 분리용 파티션 (3층 창고 보관)"
+      },
+      {
+        id: "item-47",
+        no: 47,
+        name: "이젤(소)",
+        category: "사무용품",
+        location: "1층 창고",
+        unit: "개",
+        receivedDate: "2024-08-08",
+        inflowQty: 58,
+        outflowQty: 8,
+        stockQty: 50,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "경기도노인종합복지관협회",
+        img: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=600&q=80",
+        remarks: "작품 전시 및 행사 안내용 이젤 (1층 창고 보관)"
+      },
+      {
+        id: "item-48",
+        no: 48,
+        name: "다이소 그릇",
+        category: "잡화",
+        location: "1층 창고",
+        unit: "Box",
+        receivedDate: "2024-05-20",
+        inflowQty: 10,
+        outflowQty: 5,
+        stockQty: 5,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "희망을나누는사람들",
+        img: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=80",
+        remarks: "식기 및 주방용품 (1층 창고 보관)"
+      },
+      {
+        id: "item-49",
+        no: 49,
+        name: "다이소그릇종합",
+        category: "잡화",
+        location: "1층 창고",
+        unit: "Box",
+        receivedDate: "2023-12-13",
+        inflowQty: 14,
+        outflowQty: 10,
+        stockQty: 4,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "희망을나누는사람들",
+        img: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=80",
+        remarks: "종합 식기 세트 (1층 창고 보관)"
+      },
+      {
+        id: "item-50",
+        no: 50,
+        name: "이케아 스니글라르 침대프레임",
+        category: "가구",
+        location: "3층 창고",
+        unit: "개",
+        receivedDate: "2022-11-17",
+        inflowQty: 2,
+        outflowQty: 0,
+        stockQty: 2,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "희망을나누는사람들",
+        img: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=600&q=80",
+        remarks: "원목 침대프레임 (3층 창고 보관)"
+      },
+      {
+        id: "item-51",
+        no: 51,
+        name: "이동식변기",
+        category: "안전용품",
+        location: "1층 창고",
+        unit: "개",
+        receivedDate: "2022-02-17",
+        inflowQty: 1,
+        outflowQty: 0,
+        stockQty: 1,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor: "이준영",
+        img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80",
+        remarks: "거동불편 어르신 긴급지원 이동변기 (1층 창고 보관)"
+      },
+      {
+        id: "item-52",
+        no: 52,
+        name: "종이컵(커피빈 12온스)",
+        category: "기타용품",
+        location: "3층 창고",
+        unit: "개",
+        receivedDate: "2017-04-17",
+        inflowQty: 21000,
+        outflowQty: 18000,
+        stockQty: 3000,
+        inflowAmount: 1050000,
+        stockAmount: 150000,
+        donor: "바우피엔씨",
+        img: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80",
+        remarks: "12온스 종이컵 (3층 창고 보관)"
+      },
+      {
+        id: "item-53",
+        no: 53,
+        name: "종이컵(커피빈 16온스)",
+        category: "기타용품",
+        location: "3층 창고",
+        unit: "개",
+        receivedDate: "2017-04-17",
+        inflowQty: 19000,
+        outflowQty: 18000,
+        stockQty: 1000,
+        inflowAmount: 1140000,
+        stockAmount: 60000,
+        donor: "바우피엔씨",
+        img: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80",
+        remarks: "16온스 대용량 종이컵 (3층 창고 보관)"
+      },
+      {
+        id: "item-54",
+        no: 54,
+        name: "투명D링바인더",
+        category: "사무용품",
+        location: "1층 창고",
+        unit: "개",
+        receivedDate: "2016-03-30",
+        inflowQty: 35,
+        outflowQty: 1,
+        stockQty: 34,
+        inflowAmount: 133000,
+        stockAmount: 129200,
+        donor: "오피스디포 경기인천권역점",
+        img: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=600&q=80",
+        remarks: "행정 서류철 투명 D링바인더 (1층 창고 보관)"
+      },
+      {
+        id: "item-55",
+        no: 55,
+        name: "화이트보드 40*60",
+        category: "사무용품",
+        location: "3층 창고",
+        unit: "개",
+        receivedDate: "2016-03-30",
+        inflowQty: 5,
+        outflowQty: 3,
+        stockQty: 2,
+        inflowAmount: 47500,
+        stockAmount: 19000,
+        donor: "오피스디포 경기인천권역점",
+        img: "https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=600&q=80",
+        remarks: "알림판 및 프로그램용 화이트보드 (3층 창고 보관)"
+      }
+    ];
+
+    const DEFAULT_LOGS = [
+      {
+        id: "log-1",
+        itemId: "item-23",
+        itemName: "소고기 해장국밥",
+        dept: "문화복지팀",
+        qty: 4,
+        unit: "개",
+        purpose: "공유냉장고 채움",
+        location: "공유냉장고",
+        timestamp: "2026-11-06 14:20",
+        handler: "문화복지팀 박주임"
+      },
+      {
+        id: "log-2",
+        itemId: "item-26",
+        itemName: "수향미 500G",
+        dept: "지역돌봄팀",
+        qty: 15,
+        unit: "봉지",
+        purpose: "취약계층 어르신 가정 나눔",
+        location: "MDF실",
+        timestamp: "2026-11-04 11:30",
+        handler: "지역돌봄팀 최선생"
+      },
+      {
+        id: "log-3",
+        itemId: "item-11",
+        itemName: "라벤더 신주머니(DTS60UP62M)",
+        dept: "사회참여팀",
+        qty: 25,
+        unit: "개",
+        purpose: "복지관 문화프로그램 참여자 배부",
+        location: "1층 창고",
+        timestamp: "2026-10-30 16:10",
+        handler: "사회참여팀 김주임"
+      },
+      {
+        id: "log-4",
+        itemId: "item-52",
+        itemName: "종이컵(커피빈 12온스)",
+        dept: "운영지원팀",
+        qty: 1000,
+        unit: "개",
+        purpose: "복지관 경로식당 및 행사 음료 지원",
+        location: "3층 창고",
+        timestamp: "2026-10-25 09:40",
+        handler: "운영지원팀 담당자"
+      }
+    ];
+
+    let items = [];
+    let releaseLogs = [];
+    let selectedCategory = "전체";
+    let selectedWarehouse = "전체";
+    let activeModalItemId = null;
+    let targetUploadItemId = null;
+    let newItemPhotoData = "";
+
+    /* Load & Save LocalStorage */
+    function loadData() {
+      try {
+        const rawItems = localStorage.getItem(STORAGE_KEY_ITEMS);
+        const rawLogs = localStorage.getItem(STORAGE_KEY_LOGS);
+
+        if (rawItems) {
+          items = JSON.parse(rawItems);
+        } else {
+          // Initialize with 2026.11.09 official 55 items
+          items = JSON.parse(JSON.stringify(OFFICIAL_ITEMS_20261109));
+          saveData();
+        }
+
+        if (rawLogs) {
+          releaseLogs = JSON.parse(rawLogs);
+        } else {
+          releaseLogs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+          saveData();
+        }
+      } catch (e) {
+        items = JSON.parse(JSON.stringify(OFFICIAL_ITEMS_20261109));
+        releaseLogs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(items));
+      localStorage.setItem(STORAGE_KEY_LOGS, JSON.stringify(releaseLogs));
+      updateTotalStats();
+    }
+
+    function resetToLatestData() {
+      if (confirm("2026.11.09 공식 최신 재고 현황(55개 품목)으로 복원하시겠습니까?\n기존에 로컬에서 변경된 사진이나 테스트 사용 내역이 초기화됩니다.")) {
+        items = JSON.parse(JSON.stringify(OFFICIAL_ITEMS_20261109));
+        releaseLogs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+        saveData();
+        renderCards();
+        showToast("2026.11.09 공식 재고 데이터로 복원되었습니다.");
+      }
+    }
+
+    /* Filter Handlers */
+    function selectCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll(".cat-tab-item").forEach(btn => {
+        btn.classList.toggle("active", btn.innerText.includes(cat));
+      });
+      renderCards();
+    }
+
+    function selectWarehouse(loc) {
+      selectedWarehouse = loc;
+      document.querySelectorAll(".warehouse-pill").forEach(btn => {
+        btn.classList.toggle("active", btn.innerText.trim() === (loc === '전체' ? '전체 창고' : loc));
+      });
+      renderCards();
+    }
+
+    function filterItems() {
+      renderCards();
+    }
+
+    function resetFilters() {
+      selectedCategory = "전체";
+      selectedWarehouse = "전체";
+      document.getElementById("globalSearchInput").value = "";
+      document.querySelectorAll(".cat-tab-item").forEach((btn, idx) => btn.classList.toggle("active", idx === 0));
+      document.querySelectorAll(".warehouse-pill").forEach((btn, idx) => btn.classList.toggle("active", idx === 0));
+      renderCards();
+    }
+
+    /* Summary Stats Update */
+    function updateTotalStats() {
+      const totalStock = items.reduce((sum, item) => sum + (item.stockQty || 0), 0);
+      document.getElementById("statTotalItems").innerText = `${items.length}개 품목`;
+      document.getElementById("statTotalStock").innerText = `${totalStock.toLocaleString()}개`;
+    }
+
+    /* Helper: Compress image */
+    function compressImageFile(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 800;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+          callback(dataUrl);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* Toast */
+    function showToast(msg) {
+      const toast = document.getElementById("appToast");
+      const text = document.getElementById("appToastText");
+      text.innerText = msg;
+      toast.style.display = "flex";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+    /* Quick Card Photo Upload */
+    function triggerCardPhotoUpload(itemId) {
+      targetUploadItemId = itemId;
+      const fileInput = document.getElementById("globalCardPhotoInput");
+      fileInput.value = "";
+      fileInput.click();
+    }
+
+    function triggerCardPhotoUploadFromModal() {
+      if (activeModalItemId) {
+        triggerCardPhotoUpload(activeModalItemId);
+      }
+    }
+
+    function handleGlobalCardPhotoUpload(e) {
+      const file = e.target.files[0];
+      if (!file || !targetUploadItemId) return;
+
+      compressImageFile(file, function(compressedDataUrl) {
+        const item = items.find(i => i.id === targetUploadItemId);
+        if (item) {
+          item.img = compressedDataUrl;
+          saveData();
+          renderCards();
+          if (activeModalItemId === item.id) {
+            document.getElementById("detailItemImg").src = compressedDataUrl;
+          }
+          showToast(`[${item.name}] 사진이 실제 후원물품 사진으로 변경되었습니다!`);
+        }
+        targetUploadItemId = null;
+      });
+    }
+
+    /* Render Airbnb Cards Grid */
+    function renderCards() {
+      const grid = document.getElementById("itemsGrid");
+      const searchKeyword = (document.getElementById("globalSearchInput").value || "").trim().toLowerCase();
+
+      const filtered = items.filter(item => {
+        // Category filtering (smart category matching)
+        if (selectedCategory !== "전체") {
+          if (selectedCategory === "식품" && !(item.category === "식품" || item.category === "건강기능식품")) return false;
+          if (selectedCategory === "생활용품" && !(item.category === "생활용품" || item.category === "안전용품")) return false;
+          if (selectedCategory === "잡화" && !(item.category === "잡화" || item.category === "기타용품")) return false;
+          if (selectedCategory === "도서" && !(item.category === "도서" || item.category === "사무용품")) return false;
+          if (selectedCategory === "가구" && !(item.category === "가구" || item.category === "가전제품")) return false;
+          if (selectedCategory === "기타" && !(item.category === "기타" || item.category === "상품권(이용권)")) return false;
+        }
+
+        // Warehouse location filtering
+        if (selectedWarehouse !== "전체") {
+          if (selectedWarehouse === "사용완료") {
+            if (item.location !== "사용완료" && item.stockQty > 0) return false;
+          } else {
+            if (!(item.location || "").includes(selectedWarehouse)) return false;
+          }
+        }
+
+        // Search Keyword matching
+        if (searchKeyword) {
+          const matchName = (item.name || "").toLowerCase().includes(searchKeyword);
+          const matchDonor = (item.donor || "").toLowerCase().includes(searchKeyword);
+          const matchLoc = (item.location || "").toLowerCase().includes(searchKeyword);
+          const matchCat = (item.category || "").toLowerCase().includes(searchKeyword);
+          if (!matchName && !matchDonor && !matchLoc && !matchCat) return false;
+        }
+
+        return true;
+      });
+
+      document.getElementById("itemCountDisplay").innerText = `총 ${filtered.length}개 물품`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size:36px; margin-bottom:12px;">🔍</div>
+            <div style="font-size:16px; font-weight:700; color:var(--color-hof); margin-bottom:4px;">해당하는 후원물품이 없습니다</div>
+            <div style="font-size:13px;">다른 카테고리나 보관 창고를 선택해보세요.</div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => {
+        // Stock badge text
+        let stockBadgeHtml = `<span class="badge-stock-pill">재고 ${item.stockQty.toLocaleString()}${item.unit}</span>`;
+        if (item.location === "사용완료" || item.stockQty === 0) {
+          stockBadgeHtml = `<span class="badge-stock-pill out">사용완료 (0${item.unit})</span>`;
+        } else if (item.stockQty <= 3) {
+          stockBadgeHtml = `<span class="badge-stock-pill low">재고부족 (${item.stockQty}${item.unit})</span>`;
+        }
+
+        // Recent release summary
+        const recentLog = releaseLogs.find(l => l.itemId === item.id);
+        const recentLogText = recentLog 
+          ? `최근: ${recentLog.dept} · ${recentLog.qty}${item.unit} (${recentLog.purpose})`
+          : (item.location === '사용완료' ? '상태: 부서 배부 및 사용완료' : '최근 사용 내역 없음 (보관 중)');
+
+        return `
+          <div class="item-card" onclick="openDetailModal('${item.id}')">
+            <!-- 1:1 Photo Box -->
+            <div class="card-photo-box">
+              <img class="card-img" src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80'">
+              
+              <div class="badge-location-pill">
+                <span>📍</span> <span>${item.location}</span>
+              </div>
+
+              ${stockBadgeHtml}
+
+              <!-- Direct Photo Upload Button on Card -->
+              <button class="card-photo-change-btn no-print" onclick="event.stopPropagation(); triggerCardPhotoUpload('${item.id}')" title="내 컴퓨터의 실제 후원물품 사진으로 변경">
+                📷 사진 변경
+              </button>
+            </div>
+
+            <!-- Card Info -->
+            <div class="card-body">
+              <div class="card-title-row">
+                <span class="card-item-name" title="${item.name}">${item.name}</span>
+                <span class="card-category-tag">${item.category}</span>
+              </div>
+              <div class="card-sub-info-row">
+                <span class="card-donor">후원: ${item.donor || "익명"}</span>
+                <span style="font-size:11.5px; color:var(--color-foggy);">${item.receivedDate}</span>
+              </div>
+              <div class="card-stock-highlight">
+                현재 재고: <strong>${item.stockQty.toLocaleString()}</strong> ${item.unit}
+              </div>
+              <div class="card-recent-release" title="${recentLogText}">
+                ${recentLogText}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    /* ==========================================================================
+       DETAIL MODAL & USAGE LOGIC
+       ========================================================================== */
+    function openDetailModal(itemId) {
+      const item = items.find(i => i.id === itemId);
+      if (!item) return;
+
+      activeModalItemId = itemId;
+      document.getElementById("detailItemName").innerText = item.name;
+      document.getElementById("detailItemFullName").innerText = item.name;
+      document.getElementById("detailItemImg").src = item.img;
+      document.getElementById("detailItemCategory").innerText = item.category;
+      document.getElementById("detailItemLocation").innerText = "📍 " + item.location;
+      document.getElementById("detailItemDonor").innerText = item.donor || "익명";
+      document.getElementById("detailItemDate").innerText = item.receivedDate;
+      document.getElementById("detailItemRemarks").innerText = item.remarks || "없음";
+
+      document.getElementById("detailTotalInflow").innerText = `${item.inflowQty.toLocaleString()} ${item.unit}`;
+      document.getElementById("detailTotalOutflow").innerText = `${item.outflowQty.toLocaleString()} ${item.unit}`;
+      document.getElementById("detailStockCount").innerText = `${item.stockQty.toLocaleString()} ${item.unit}`;
+
+      // Reset Takeout form
+      document.getElementById("takeoutDept").value = "운영지원팀";
+      document.getElementById("customDeptInput").style.display = "none";
+      document.getElementById("customDeptInput").value = "";
+      document.getElementById("takeoutQty").value = 1;
+      document.getElementById("takeoutQty").max = item.stockQty > 0 ? item.stockQty : 1;
+      document.getElementById("takeoutUnitSpan").innerText = item.unit;
+      document.getElementById("takeoutPurpose").value = "";
+
+      renderItemHistoryList(item.id);
+      openModal("modalDetail");
+    }
+
+    function toggleCustomDeptInput() {
+      const sel = document.getElementById("takeoutDept").value;
+      const customInput = document.getElementById("customDeptInput");
+      customInput.style.display = sel === "타기관" ? "block" : "none";
+      if (sel === "타기관") customInput.focus();
+    }
+
+    function adjustQty(delta) {
+      const input = document.getElementById("takeoutQty");
+      let val = parseInt(input.value, 10) || 1;
+      val = Math.max(1, val + delta);
+      input.value = val;
+    }
+
+    function setPurpose(text) {
+      document.getElementById("takeoutPurpose").value = text;
+    }
+
+    function submitTakeout() {
+      const item = items.find(i => i.id === activeModalItemId);
+      if (!item) return;
+
+      let dept = document.getElementById("takeoutDept").value;
+      if (dept === "타기관") {
+        const custom = document.getElementById("customDeptInput").value.trim();
+        if (!custom) {
+          alert("타기관 명칭을 입력해주세요.");
+          document.getElementById("customDeptInput").focus();
+          return;
+        }
+        dept = `타기관 (${custom})`;
+      }
+
+      const qty = parseInt(document.getElementById("takeoutQty").value, 10);
+      if (!qty || qty < 1) {
+        alert("사용할 수량을 1 이상 올바르게 입력해주세요.");
+        return;
+      }
+
+      const purpose = document.getElementById("takeoutPurpose").value.trim();
+      if (!purpose) {
+        alert("사용 목적을 입력하거나 아래 추천 버튼을 선택해주세요.");
+        document.getElementById("takeoutPurpose").focus();
+        return;
+      }
+
+      if (qty > item.stockQty) {
+        if (!confirm(`현재 남은 재고(${item.stockQty}${item.unit})보다 많은 수량(${qty}${item.unit})입니다. 그래도 사용 처리하시겠습니까?`)) {
+          return;
+        }
+      }
+
+      // Stock Decrement
+      item.outflowQty += qty;
+      item.stockQty = Math.max(0, item.inflowQty - item.outflowQty);
+      if (item.stockQty === 0) {
+        item.location = "사용완료";
+      }
+
+      const now = new Date();
+      const timeStr = now.toISOString().slice(0, 10) + " " + now.toTimeString().slice(0, 5);
+
+      const newLog = {
+        id: "log-" + Date.now(),
+        itemId: item.id,
+        itemName: item.name,
+        dept: dept,
+        qty: qty,
+        unit: item.unit,
+        purpose: purpose,
+        location: item.location,
+        timestamp: timeStr,
+        handler: dept + " 담당자"
+      };
+
+      releaseLogs.unshift(newLog);
+      saveData();
+
+      // Update UI
+      document.getElementById("detailStockCount").innerText = `${item.stockQty.toLocaleString()} ${item.unit}`;
+      document.getElementById("detailTotalOutflow").innerText = `${item.outflowQty.toLocaleString()} ${item.unit}`;
+      document.getElementById("takeoutPurpose").value = "";
+      document.getElementById("takeoutQty").value = 1;
+
+      renderItemHistoryList(item.id);
+      renderCards();
+
+      showToast(`[${dept}] ${item.name} ${qty}${item.unit} 사용 등록 완료!`);
+      alert(`[${dept}] ${item.name} ${qty}${item.unit} 사용 등록이 완료되었습니다.\n재고가 자동으로 차감되었습니다.`);
+    }
+
+    /* Render Item History Timeline */
+    function renderItemHistoryList(itemId) {
+      const container = document.getElementById("detailHistoryList");
+      const filtered = releaseLogs.filter(l => l.itemId === itemId);
+
+      document.getElementById("itemHistoryCountBadge").innerText = `총 ${filtered.length}건`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="padding:16px; text-align:center; color:var(--color-foggy); font-size:13px;">아직 사용 이력이 없습니다.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(log => `
+        <div class="history-card-item">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="history-dept-badge">${log.dept}</span>
+            <span style="font-weight:600; color:var(--color-hof);">${log.purpose}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span class="history-qty-badge">${log.qty.toLocaleString()} ${log.unit}</span>
+            <span class="history-date">${log.timestamp}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    /* ==========================================================================
+       ADD NEW ITEM MODAL
+       ========================================================================== */
+    function openAddItemModal() {
+      newItemPhotoData = "";
+      document.getElementById("newItemPreviewImg").style.display = "none";
+      document.getElementById("newItemPreviewText").style.display = "flex";
+      document.getElementById("addName").value = "";
+      document.getElementById("addCategory").value = "식품";
+      document.getElementById("addLocation").value = "1층 창고";
+      document.getElementById("addQty").value = "";
+      document.getElementById("addUnit").value = "개";
+      document.getElementById("addDonor").value = "";
+      document.getElementById("addDate").valueAsDate = new Date();
+      document.getElementById("addRemarks").value = "";
+      openModal("modalAddItem");
+    }
+
+    function handleNewItemPhoto(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      compressImageFile(file, function(compressedDataUrl) {
+        newItemPhotoData = compressedDataUrl;
+        const preview = document.getElementById("newItemPreviewImg");
+        preview.src = newItemPhotoData;
+        preview.style.display = "block";
+        document.getElementById("newItemPreviewText").style.display = "none";
+      });
+    }
+
+    function submitNewItem() {
+      const name = document.getElementById("addName").value.trim();
+      const category = document.getElementById("addCategory").value;
+      const location = document.getElementById("addLocation").value;
+      const qty = parseInt(document.getElementById("addQty").value, 10);
+      const unit = document.getElementById("addUnit").value.trim() || "개";
+      const donor = document.getElementById("addDonor").value.trim() || "익명";
+      const date = document.getElementById("addDate").value || new Date().toISOString().slice(0, 10);
+      const remarks = document.getElementById("addRemarks").value.trim();
+
+      if (!name || !qty || qty < 1) {
+        alert("품명과 수입 수량을 올바르게 입력해주세요.");
+        return;
+      }
+
+      let fallbackPhoto = "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80";
+      if (category === "식품") fallbackPhoto = "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80";
+      if (category === "도서") fallbackPhoto = "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80";
+      if (category === "생활용품") fallbackPhoto = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80";
+      if (category === "가구") fallbackPhoto = "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=600&q=80";
+      if (category === "잡화") fallbackPhoto = "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80";
+
+      const newItem = {
+        id: "item-" + Date.now(),
+        no: items.length + 1,
+        name,
+        category,
+        location,
+        unit,
+        inflowQty: qty,
+        outflowQty: 0,
+        stockQty: qty,
+        inflowAmount: 0,
+        stockAmount: 0,
+        donor,
+        receivedDate: date,
+        img: newItemPhotoData || fallbackPhoto,
+        remarks
+      };
+
+      items.unshift(newItem);
+      saveData();
+      closeModal("modalAddItem");
+      renderCards();
+      showToast(`[${name}] 신규 후원품 수입 등록 완료!`);
+      alert(`[${name}] 신규 후원품 수입 등록이 완료되었습니다.`);
+    }
+
+    /* ==========================================================================
+       FULL USAGE LEDGER MODAL
+       ========================================================================== */
+    function openLedgerModal() {
+      const tbody = document.getElementById("fullLedgerTableBody");
+      if (releaseLogs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="padding:30px; text-align:center; color:var(--color-foggy);">사용 기록이 없습니다.</td></tr>`;
+      } else {
+        tbody.innerHTML = releaseLogs.map(log => `
+          <tr>
+            <td>${log.timestamp}</td>
+            <td><strong>${log.dept}</strong></td>
+            <td><strong>${log.itemName}</strong></td>
+            <td><span style="font-weight:700; color:var(--color-rausch);">${log.qty.toLocaleString()}</span> ${log.unit}</td>
+            <td>${log.location}</td>
+            <td>${log.purpose}</td>
+            <td>${log.handler || "-"}</td>
+          </tr>
+        `).join("");
+      }
+      openModal("modalLedger");
+    }
+
+    /* ==========================================================================
+       EXCEL EXPORT (실무 및 감사 제출용)
+       ========================================================================== */
+    function exportToExcel() {
+      // 1. Stock sheet data
+      const stockData = items.map((item, idx) => ({
+        "연번": idx + 1,
+        "후원자 명": item.donor,
+        "후원물품종류": item.category,
+        "품명": item.name,
+        "단위": item.unit,
+        "수입일자": item.receivedDate,
+        "총입고 수량": item.inflowQty,
+        "총 출고수량": item.outflowQty,
+        "재고수량": item.stockQty,
+        "후원품 위치": item.location,
+        "비고": item.remarks || ""
+      }));
+
+      // 2. Usage logs data
+      const logData = releaseLogs.map((log, idx) => ({
+        "연번": idx + 1,
+        "사용일시": log.timestamp,
+        "사용부서": log.dept,
+        "품명": log.itemName,
+        "사용수량": log.qty,
+        "단위": log.unit,
+        "보관창고": log.location,
+        "사용목적": log.purpose,
+        "담당자": log.handler || "-"
+      }));
+
+      if (window.XLSX) {
+        const wb = XLSX.utils.book_new();
+        const wsStock = XLSX.utils.json_to_sheet(stockData);
+        const wsLog = XLSX.utils.json_to_sheet(logData);
+        XLSX.utils.book_append_sheet(wb, wsStock, "후원물품재고현황");
+        XLSX.utils.book_append_sheet(wb, wsLog, "후원물품사용대장");
+        XLSX.writeFile(wb, `화성시남부노인복지관_후원물품_재고및사용대장_20261109.xlsx`);
+      } else {
+        alert("엑셀 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      }
+    }
+
+    /* ==========================================================================
+       EXPORT UPDATED HTML WITH NEW PHOTOS FOR GITHUB COMMIT
+       ========================================================================== */
+    function exportUpdatedHtml() {
+      try {
+        let fullHtml = document.documentElement.outerHTML;
+        fullHtml = "<!DOCTYPE html>\n<html lang=\"ko\">\n" + fullHtml.slice(fullHtml.indexOf("<head>"));
+
+        const newVersionKey = "hsnambu_airbnb_items_" + Date.now();
+        const newLogsKey = "hsnambu_airbnb_logs_" + Date.now();
+
+        // 1. Storage Key 업데이트 (다른 컴퓨터/폰 접속 시 기존 캐시 강제 무효화 및 새 데이터 즉시 로드)
+        fullHtml = fullHtml.replace(/const STORAGE_KEY_ITEMS = ".*?";/, `const STORAGE_KEY_ITEMS = "${newVersionKey}";`);
+        fullHtml = fullHtml.replace(/const STORAGE_KEY_LOGS = ".*?";/, `const STORAGE_KEY_LOGS = "${newLogsKey}";`);
+
+        // 2. OFFICIAL_ITEMS_20261109 및 DEFAULT_LOGS 데이터 교체
+        const itemsRegex = /const OFFICIAL_ITEMS_20261109 = \[[\s\S]*?\n\s*\];/;
+        const logsRegex = /const DEFAULT_LOGS = \[[\s\S]*?\n\s*\];/;
+
+        if (!itemsRegex.test(fullHtml)) {
+          alert("데이터 템플릿 매칭 실패. 잠시 후 다시 시도해주세요.");
+          return;
+        }
+
+        fullHtml = fullHtml.replace(itemsRegex, "const OFFICIAL_ITEMS_20261109 = " + JSON.stringify(items, null, 2) + ";");
+        fullHtml = fullHtml.replace(logsRegex, "const DEFAULT_LOGS = " + JSON.stringify(releaseLogs, null, 2) + ";");
+
+        // 3. 열려있는 모달 상태 제거
+        fullHtml = fullHtml.replace(/modal-backdrop open/g, "modal-backdrop");
+
+        // 4. Blob 생성 및 자동 다운로드
+        const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+        const downloadUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = "index.html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(downloadUrl);
+
+        alert("✅ 변경하신 실제 사진과 최신 재고가 모두 담긴 새 'index.html' 파일이 다운로드되었습니다!\n\n[다른 사람 컴퓨터에서도 보이게 하는 마지막 1단계]\n1. 깃허브 저장소(hsnambu-hoowon) 화면으로 이동합니다.\n2. 방금 다운로드된 'index.html' 파일을 깃허브 화면에 마우스로 끌어서 다시 올립니다(Add file -> Upload files -> Commit).\n\n이제 다른 사람의 컴퓨터나 스마트폰에서도 내가 넣은 사진이 100% 똑같이 뜹니다!");
+      } catch (err) {
+        alert("저장 오류: " + err.message);
+      }
+    }
+
+    /* ==========================================================================
+       MODAL UTILS
+       ========================================================================== */
+    function openModal(id) {
+      document.getElementById(id).classList.add("open");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+
+    document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+      backdrop.addEventListener("click", function(e) {
+        if (e.target === this) {
+          this.classList.remove("open");
+        }
+      });
+    });
+
+    // Boot
+    window.addEventListener("DOMContentLoaded", () => {
+      loadData();
+      updateTotalStats();
+      renderCards();
+    });
+  </script>
+</body>
+</html>
