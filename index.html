@@ -1267,7 +1267,7 @@
           <div class="form-row-3">
             <div class="form-group">
               <label class="form-label">사용 부서 *</label>
-              <select id="takeoutDept" class="form-select" onchange="toggleCustomDeptInput()">
+              <select id="takeoutDept" class="form-select" onchange="onDeptChange()">
                 <option value="운영지원팀">운영지원팀</option>
                 <option value="사회참여팀">사회참여팀</option>
                 <option value="문화복지팀">문화복지팀</option>
@@ -1278,10 +1278,23 @@
             </div>
 
             <div class="form-group">
+              <label class="form-label">사용 직원 *</label>
+              <select id="takeoutStaff" class="form-select" onchange="onStaffChange()">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+
+            <div class="form-group">
               <label class="form-label">사용 일자 (달력 클릭) *</label>
               <input type="date" id="takeoutDate" class="form-input" style="font-weight:600; cursor:pointer;" title="사용 일자를 달력에서 직접 선택하세요">
             </div>
+          </div>
 
+          <div class="form-row-3" style="margin-top:0;">
+            <div class="form-group" id="customStaffWrap" style="display:none;">
+              <label class="form-label">직접 입력 (이름 직책)</label>
+              <input type="text" id="customStaffInput" class="form-input" placeholder="예: 홍길동 사회복지사">
+            </div>
             <div class="form-group">
               <label class="form-label">사용 수량 *</label>
               <div style="display:flex; align-items:center; gap:8px;">
@@ -1446,7 +1459,8 @@
     <div class="modal-card" style="max-width:980px;">
       <div class="modal-header">
         <div class="modal-title">화성시남부노인복지관 후원물품 사용대장 (전체 이력)</div>
-        <div style="display:flex; gap:8px;">
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" style="color:var(--color-danger); border-color:#f5c2b7; font-size:12px;" onclick="clearAllLogs()">🗑️ 전체 초기화</button>
           <button class="btn btn-outline btn-sm" onclick="exportToExcel()">엑셀 다운로드</button>
           <button class="modal-close-btn" onclick="closeModal('modalLedger')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -1461,11 +1475,12 @@
               <tr>
                 <th>사용일시</th>
                 <th>사용 부서</th>
+                <th>사용 직원</th>
                 <th>품명</th>
                 <th>사용 수량</th>
                 <th>보관 창고</th>
                 <th>사용 목적</th>
-                <th>담당자</th>
+                <th>삭제</th>
               </tr>
             </thead>
             <tbody id="fullLedgerTableBody">
@@ -2841,6 +2856,7 @@
       document.getElementById("takeoutDept").value = "운영지원팀";
       document.getElementById("customDeptWrap").style.display = "none";
       document.getElementById("customDeptInput").value = "";
+      populateStaffDropdown("운영지원팀");
 
       // 사용 일자 달력 기본값을 오늘 날짜로 세팅
       document.getElementById("takeoutDate").value = new Date().toISOString().slice(0, 10);
@@ -2963,6 +2979,82 @@
       if (sel === "타기관") document.getElementById("customDeptInput").focus();
     }
 
+    /* ===== 직원 목록 (부서별) ===== */
+    const STAFF_LIST = {
+      "운영지원팀": [
+        { name: "조은정", title: "과장" },
+        { name: "김수나", title: "대리" },
+        { name: "김지민", title: "사무원" },
+        { name: "유관재", title: "주임" },
+        { name: "이은선", title: "주임" },
+        { name: "성재훈", title: "조리장" },
+        { name: "정선미", title: "주임(맞돌)" },
+        { name: "송미선", title: "일자리담당자" },
+        { name: "박음정", title: "일자리담당자" },
+        { name: "김은희", title: "사회복지사(맞돌)" }
+      ],
+      "사회참여팀": [
+        { name: "장성욱", title: "대리" },
+        { name: "현정은", title: "사회복지사" },
+        { name: "김은영", title: "사회복지사" },
+        { name: "이상혁", title: "사회복지사" },
+        { name: "정현아", title: "일자리담당자" },
+        { name: "이현아", title: "일자리담당자" }
+      ],
+      "문화복지팀": [
+        { name: "김두연", title: "팀장" },
+        { name: "이다현", title: "대리" },
+        { name: "정주연", title: "사회복지사(맞돌)" },
+        { name: "안지해", title: "일자리담당자" },
+        { name: "최태선", title: "사회복지사(맞돌)" }
+      ],
+      "지역돌봄팀": [
+        { name: "김미화", title: "팀장" },
+        { name: "김은비", title: "대리" }
+      ],
+      "주간보호센터": [
+        { name: "박희숙", title: "사회복지사(맞돌)" },
+        { name: "김화선", title: "사회복지사" },
+        { name: "박상연", title: "사회복지사" },
+        { name: "김금자", title: "요양보호사" },
+        { name: "김순복", title: "상담사" },
+        { name: "최문자", title: "주임" },
+        { name: "김학림", title: "요양보호사" },
+        { name: "권민혜", title: "응급관리요원" },
+        { name: "정진영", title: "물리치료사" },
+        { name: "안미정", title: "보조원" }
+      ],
+      "관장/부장": [
+        { name: "조지형", title: "관장" },
+        { name: "백승영", title: "부장" }
+      ],
+      "타기관": []
+    };
+
+    function populateStaffDropdown(dept) {
+      const staffSel = document.getElementById("takeoutStaff");
+      const staffList = STAFF_LIST[dept] || [];
+      let options = staffList.map(s => `<option value="${s.name} ${s.title}">${s.name} ${s.title}</option>`).join("");
+      options += `<option value="__custom__">+ 신규/추가 직원 직접 입력</option>`;
+      staffSel.innerHTML = options;
+      document.getElementById("customStaffWrap").style.display = "none";
+      document.getElementById("customStaffInput").value = "";
+    }
+
+    function onDeptChange() {
+      const dept = document.getElementById("takeoutDept").value;
+      const deptWrap = document.getElementById("customDeptWrap");
+      deptWrap.style.display = dept === "타기관" ? "block" : "none";
+      if (dept === "타기관") document.getElementById("customDeptInput").focus();
+      populateStaffDropdown(dept);
+    }
+
+    function onStaffChange() {
+      const val = document.getElementById("takeoutStaff").value;
+      document.getElementById("customStaffWrap").style.display = val === "__custom__" ? "block" : "none";
+      if (val === "__custom__") document.getElementById("customStaffInput").focus();
+    }
+
     function adjustQty(delta) {
       const input = document.getElementById("takeoutQty");
       let val = parseInt(input.value, 10) || 1;
@@ -2989,6 +3081,18 @@
         }
         dept = `타기관 (${custom})`;
       }
+
+      // 직원 선택
+      let staffVal = document.getElementById("takeoutStaff").value;
+      if (staffVal === "__custom__") {
+        staffVal = document.getElementById("customStaffInput").value.trim();
+        if (!staffVal) {
+          alert("신규 직원 이름과 직책을 입력해주세요. (예: 홍길동 사회복지사)");
+          document.getElementById("customStaffInput").focus();
+          return;
+        }
+      }
+      const handler = staffVal ? `[${dept}] ${staffVal}` : `[${dept}] 담당자`;
 
       const qty = parseInt(document.getElementById("takeoutQty").value, 10);
       if (!qty || qty < 1) {
@@ -3029,7 +3133,7 @@
         purpose: purpose,
         location: item.location,
         timestamp: selectedDate, // 사용자가 달력에서 직접 지정한 사용 일자
-        handler: dept + " 담당자"
+        handler: handler
       };
 
       releaseLogs.unshift(newLog);
@@ -3097,8 +3201,9 @@
 
       container.innerHTML = filtered.map(log => `
         <div class="history-card-item">
-          <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
             <span class="history-dept-badge">${log.dept}</span>
+            ${log.handler && log.handler !== log.dept + ' 담당자' ? `<span style="font-size:12px; color:var(--color-foggy); font-weight:600;">${log.handler.replace('[' + log.dept + '] ', '')}</span>` : ''}
             <span style="font-weight:600; color:var(--color-hof);">${log.purpose}</span>
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
@@ -3192,24 +3297,77 @@
     /* ==========================================================================
        FULL USAGE LEDGER MODAL
        ========================================================================== */
-    function openLedgerModal() {
+    function renderLedgerTable() {
       const tbody = document.getElementById("fullLedgerTableBody");
       if (releaseLogs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="padding:30px; text-align:center; color:var(--color-foggy);">사용 기록이 없습니다.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="padding:30px; text-align:center; color:var(--color-foggy);">사용 기록이 없습니다.</td></tr>`;
       } else {
-        tbody.innerHTML = releaseLogs.map(log => `
+        tbody.innerHTML = releaseLogs.map((log, idx) => `
           <tr>
             <td>${log.timestamp}</td>
             <td><strong>${log.dept}</strong></td>
+            <td style="color:var(--color-foggy); font-size:12px;">${log.handler || "-"}</td>
             <td><strong>${log.itemName}</strong></td>
             <td><span style="font-weight:700; color:var(--color-rausch);">${log.qty.toLocaleString()}</span> ${log.unit}</td>
-            <td>${log.location}</td>
+            <td>${log.location || "-"}</td>
             <td>${log.purpose}</td>
-            <td>${log.handler || "-"}</td>
+            <td style="text-align:center;">
+              <button onclick="deleteLedgerLog('${log.id}')" style="background:#fff0f0; border:1px solid #f5c2b7; color:var(--color-danger); border-radius:6px; padding:3px 9px; font-size:12px; cursor:pointer; white-space:nowrap;" title="이 사용 내역 삭제 (재고 복구)">🗑️ 삭제</button>
+            </td>
           </tr>
         `).join("");
       }
+    }
+
+    function openLedgerModal() {
+      renderLedgerTable();
       openModal("modalLedger");
+    }
+
+    function deleteLedgerLog(logId) {
+      const logIndex = releaseLogs.findIndex(l => l.id === logId);
+      if (logIndex === -1) return;
+      const log = releaseLogs[logIndex];
+      if (!confirm(`이 사용 내역을 삭제하시겠습니까?\n[${log.dept}] ${log.itemName} ${log.qty}${log.unit} (${log.timestamp})\n\n※ 삭제 시 차감되었던 수량(${log.qty}${log.unit})이 재고로 자동 복구됩니다.`)) return;
+
+      const item = items.find(i => i.id === log.itemId);
+      if (item) {
+        item.stockQty += log.qty;
+        item.outflowQty = Math.max(0, item.outflowQty - log.qty);
+        if (item.location === "사용완료" && item.stockQty > 0) item.location = "1층 창고";
+      }
+      releaseLogs.splice(logIndex, 1);
+      saveData();
+      renderLedgerTable();
+      if (activeModalItemId && item && activeModalItemId === item.id) {
+        document.getElementById("detailStockCount").innerText = `${item.stockQty.toLocaleString()} ${item.unit}`;
+        document.getElementById("detailTotalOutflow").innerText = `${item.outflowQty.toLocaleString()} ${item.unit}`;
+        renderItemHistoryList(item.id);
+      }
+      renderCards();
+      updateTotalStats();
+      showToast("사용 내역이 삭제되고 재고가 복구되었습니다.");
+    }
+
+    function clearAllLogs() {
+      if (releaseLogs.length === 0) { alert("삭제할 사용 이력이 없습니다."); return; }
+      if (!confirm(`전체 사용 이력 ${releaseLogs.length}건을 모두 삭제하시겠습니까?\n\n※ 차감되었던 수량이 각 품목 재고로 모두 복구됩니다.\n이 작업은 되돌릴 수 없습니다.`)) return;
+
+      // Restore all stock
+      releaseLogs.forEach(log => {
+        const item = items.find(i => i.id === log.itemId);
+        if (item) {
+          item.stockQty += log.qty;
+          item.outflowQty = Math.max(0, item.outflowQty - log.qty);
+          if (item.location === "사용완료" && item.stockQty > 0) item.location = "1층 창고";
+        }
+      });
+      releaseLogs = [];
+      saveData();
+      renderLedgerTable();
+      renderCards();
+      updateTotalStats();
+      showToast("전체 사용 이력이 초기화되었습니다.");
     }
 
     /* ==========================================================================
@@ -3236,12 +3394,12 @@
         "연번": idx + 1,
         "사용일시": log.timestamp,
         "사용부서": log.dept,
+        "사용직원": log.handler || "-",
         "품명": log.itemName,
         "사용수량": log.qty,
         "단위": log.unit,
-        "보관창고": log.location,
-        "사용목적": log.purpose,
-        "담당자": log.handler || "-"
+        "보관창고": log.location || "-",
+        "사용목적": log.purpose
       }));
 
       if (window.XLSX) {
